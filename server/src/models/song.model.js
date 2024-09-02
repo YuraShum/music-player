@@ -15,7 +15,6 @@ const songShema = new mongoose.Schema({
     },
     cover: {
         type: String,
-        required: true 
     },
     uploadedBy: {
         type: mongoose.Schema.Types.ObjectId,
