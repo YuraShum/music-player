@@ -1,6 +1,6 @@
 import jsonwebtoken from 'jsonwebtoken'
-import responseHendlers from '../handlers/response'
-import userModel from '../models/user.model'
+import responseHendlers from '../handlers/response.js'
+import userModel from '../models/user.model.js'
 
 
 const tokenDecode = (request) => {
@@ -18,11 +18,11 @@ const tokenDecode = (request) => {
 }
 
 const authMiddleware = async (request, response, next) => {
-    const tokenDecode = tokenDecode(request)
+    const tokDecode = tokenDecode(request)
 
-    if (!tokenDecode) responseHendlers.unautorize(response)
+    if (!tokDecode) responseHendlers.unautorize(response)
 
-    const user = await userModel.findById(tokenDecode.data)
+    const user = await userModel.findById(tokDecode.data)
 
     if(!user) responseHendlers.unautorize(response)
 
