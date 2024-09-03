@@ -1,6 +1,3 @@
-import { response } from "express"
-
-
 const responseConstuctor = (response, statusCode, data) => {
     return response.status(statusCode).json(data)
 }

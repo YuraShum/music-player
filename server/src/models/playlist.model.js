@@ -27,6 +27,6 @@ const playlistShema = mongoose.Schema({
 })
 
 
-const PlaylistModel = mongoose.model('Playlist', playlistShema)
+const playlistModel = mongoose.model('Playlist', playlistShema)
 
-export default PlaylistModel
+export default playlistModel
