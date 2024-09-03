@@ -1,20 +1,21 @@
-import multer from 'multer'
-import path from 'path'
-
+import multer from 'multer';
+import path from 'path';
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         if (file.fieldname === 'mp3') {
-            cb(null, 'uploads/mp3/')
-        }
-        else if (file.fieldname === 'cover') {
+            cb(null, 'uploads/mp3/');
+        } else if (file.fieldname === 'cover') {
             cb(null, 'uploads/covers/');
         }
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname))
+        const ext = path.extname(file.originalname);
+        const originalName = path.basename(file.originalname, ext);
+        const newFilename = `${originalName}${ext}`;
+        cb(null, newFilename);
     }
-})
+});
 
 const fileFilter = (req, file, cb) => {
     if (file.fieldname === 'mp3' && file.mimetype === 'audio/mpeg') {
@@ -30,6 +31,6 @@ const upload = multer({
     storage,
     fileFilter,
     limits: { fileSize: 10 * 1024 * 1024 }
-})
+});
 
-export default upload
+export default upload;
