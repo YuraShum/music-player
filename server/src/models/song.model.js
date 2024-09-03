@@ -17,7 +17,7 @@ const songShema = new mongoose.Schema({
         type: String,
     },
     uploadedBy: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'User', 
         required: true
     },
