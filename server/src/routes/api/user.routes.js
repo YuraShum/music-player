@@ -25,6 +25,16 @@ router.post(
         .withMessage("Потрібен пароль")
         .isLength({ min: 8 })
         .withMessage("Пароль користувача має мати принаймі 8 символів"),
+    body('confirmPasword')
+        .exists()
+        .withMessage("Потрібне підтвердження паролю.")
+        .isLength({ min: 8 })
+        .withMessage("Підтверджений пароль має мати принаймі 8 символів")
+        .custom((value, { req }) => {
+            if (value !== req.body.password) throw new Error("Підтврдження паролю не пройшло, перевірте його будь ласка.")
+            return true
+        })
+    ,
     validator,
     userService.userSignUp.bind(userService)
 
