@@ -29,5 +29,5 @@ export interface UserSignInParams {
 export interface UserSignUpParams {
     username: string,
     password: string,
-    confirmPasword: string
+    confirmPassword: string
 }

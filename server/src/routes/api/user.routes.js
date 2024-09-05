@@ -25,7 +25,7 @@ router.post(
         .withMessage("Потрібен пароль")
         .isLength({ min: 8 })
         .withMessage("Пароль користувача має мати принаймі 8 символів"),
-    body('confirmPasword')
+    body('confirmPassword')
         .exists()
         .withMessage("Потрібне підтвердження паролю.")
         .isLength({ min: 8 })
