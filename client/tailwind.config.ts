@@ -15,10 +15,23 @@ const config: Config = {
       },
       colors: {
         primary: "#363558",
-        custom: "#fbfbfb"
-      }
+        custom: "#fbfbfb",
+        hovered: "#7c7cac"
+      },
+      animation: {
+        shimmer: "shimmer 2s linear infinite",
+      },
+      keyframes: {
+        shimmer: {
+          from: {
+            backgroundPosition: "0 0",
+          },
+          to: {
+            backgroundPosition: "-200% 0",
+          },
+        },
+      },
     },
-    
   },
   plugins: [],
 };
