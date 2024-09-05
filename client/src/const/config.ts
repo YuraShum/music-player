@@ -1,3 +1,3 @@
-const BASE_URL = "http://localhost:5000/api/player"
+const BASE_URL = "http://localhost:5020/api/player"
 
 export default {BASE_URL}

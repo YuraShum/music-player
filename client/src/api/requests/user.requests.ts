@@ -8,6 +8,7 @@ import publicUser from "../user/public"
 const userApi = {
     userSignup: async ({username, password, confirmPassword}: UserSignUpParams) => {
         try {
+            console.log({username, password, confirmPassword})
             const response = await publicUser.post(
                 userEndpointsConfig.userSignUp,
                 {username, password, confirmPassword}
