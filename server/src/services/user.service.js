@@ -84,8 +84,27 @@ class UserService {
         } catch (error) {
             return responseHendlers.error(response)
         }
+    }
 
-
+    async getUserRanking(request, response) {
+        try {
+            const users = await userModel.find()
+                .select('username songs') 
+                .lean();
+    
+            const sortedUsers = users.sort((a, b) => b.songs.length - a.songs.length);
+    
+            const userId = request.user.id;
+            const userRank = sortedUsers.findIndex(user => user._id.toString() === userId) + 1;
+    
+            if (userRank === 0) {
+                return responseHendlers.notFound(response, "Користувача не знайдено в рейтингу.");
+            }
+    
+            responseHendlers.ok(response, { rank: userRank, totalUsers: sortedUsers.length });
+        } catch (error) {
+            return responseHendlers.error(response);
+        }
     }
 }
 

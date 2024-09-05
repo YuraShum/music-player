@@ -59,5 +59,11 @@ router.get(
 
 )
 
+router.get(
+    '/rating',
+    tokenMiddleware.authMiddleware,
+    userService.getUserRanking.bind(userService)
+)
+
 export default router
 

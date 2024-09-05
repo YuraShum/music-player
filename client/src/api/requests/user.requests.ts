@@ -39,6 +39,16 @@ const userApi = {
         } catch (error) {
             return {error}
         }
+    },
+    getUserRating: async () => {
+        try {
+            const response = await privateUser.get(
+                userEndpointsConfig.getUserRating
+            )
+            return {response}
+        } catch (error) {
+            return {error}
+        }
     } 
 }
 
