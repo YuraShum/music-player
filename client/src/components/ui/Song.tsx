@@ -3,6 +3,8 @@ import { SiMusicbrainz } from "react-icons/si";
 import { IoPersonSharp } from "react-icons/io5";
 import { GrFavorite } from "react-icons/gr";
 import CustomButton from './CustomButton';
+import songApi from '@/api/requests/song.requests';
+import { toast } from 'react-toastify';
 
 
 type Props = {
@@ -14,12 +16,21 @@ type Props = {
     id: string
 }
 
-//!! додати функціонал
-const handleDeleteSong = async() => {
-
-}
-
 const Song = ({ artist, cover, mp3, title, index, id }: Props) => {
+
+    //!! додати функціонал
+    const handleDeleteSong = async () => {
+
+        const { response, error } = await songApi.deleteSong({ songId: id})
+
+        if(response){
+            toast.success('Пісню успішно видалено')
+        }
+        if(error){
+            console.log(error)
+            toast.error("Пісню неможливо видалити")
+        }
+    }
     return (
         <div className='flex justify-between'>
             <div className='flex items-center gap-8'>
@@ -37,8 +48,8 @@ const Song = ({ artist, cover, mp3, title, index, id }: Props) => {
                 </div>
             </div>
             <div className='flex gap-6 items-center'>
-                <GrFavorite  className='w-6 h-6 cursor-pointer' />
-                <CustomButton text='Delete' handleClick={() => console.log()}></CustomButton>
+                <GrFavorite className='w-6 h-6 cursor-pointer' />
+                <CustomButton text='Delete' handleClick={handleDeleteSong}></CustomButton>
             </div>
         </div>
     )

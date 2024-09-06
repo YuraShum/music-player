@@ -67,9 +67,11 @@ class SongService {
     }
 
     async deleteSong(request, response) {
+        
         try {
             console.log("Delete")
             const { songId } = request.body
+            console.log(songId)
             const userId = request.user.id
 
             const song = await songModel.findOne(

@@ -82,12 +82,13 @@ export default function Home() {
           <div className="flex flex-col gap-6 p-6">
             {data?.songs?.map((song, index) => (
               <Song
+                key={song._id}
                 title={song.title}
                 artist={song.artist}
                 mp3={song.mp3}
                 cover={song.cover}
                 index={index}
-                id={song.id} />
+                id={song._id} />
             ))}
           </div>
         </div>
@@ -97,6 +98,7 @@ export default function Home() {
           <div className="flex flex-col gap-6 p-6">
             {data?.playlists?.map((playlist, index) => (
               <Playlist
+              key={playlist._id}
                 name={playlist.name}
                 description = {playlist.description}
                 songs={playlist.songs}
