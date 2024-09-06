@@ -11,6 +11,9 @@ type Props = {
 
 const MainLayout = ({ children }: Props) => {
     const { user } = useSelector((state: any) => state.user)
+
+    console.log('User MainLayout', user)
+
     
     return (
         <>
