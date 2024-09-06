@@ -33,7 +33,7 @@ const songApi = {
             const response = await privateUser.delete(
                 songEndpointsConfig.deleteSong,
                 {
-                    data: songId
+                    data: {songId}
                 }
             )
             return {response}
