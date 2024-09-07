@@ -7,6 +7,7 @@ import { toast } from 'react-toastify'
 import { IoIosSearch } from "react-icons/io";
 import { RiDownloadCloudLine } from "react-icons/ri";
 import DownLoadSongForm from '@/components/ui/forms/DownLoadSongForm'
+import Song from '@/components/ui/Song'
 
 type Props = {}
 
@@ -14,13 +15,24 @@ const Page = (props: Props) => {
     const { user } = useSelector((state: any) => state.user)
 
     const [songs, setSongs] = useState(null)
+    const [originalSongs, setOriginalSongs] = useState(null) // Додаємо стан для оригінального списку пісень
     const [searchValue, setSearchValue] = useState('')
     const [createFormIsOpen, setCreateFromIsOpen] = useState(false)
 
     const handleChangeSearchValue = (event) => {
-        console.log(event.target.value)
-        setSearchValue(event.target.value)
-    }
+        const searchTerm = event.target.value.toLowerCase();
+        console.log(searchTerm);
+
+        setSongs(originalSongs?.filter(song =>
+            song.title.toLowerCase().includes(searchTerm)
+        ));
+        setSongs(originalSongs?.filter(song =>
+            song.artist.toLowerCase().includes(searchTerm)
+        ));
+
+
+        setSearchValue(searchTerm);
+    };
 
     useEffect(() => {
         const getUserSongs = async () => {
@@ -28,7 +40,8 @@ const Page = (props: Props) => {
             console.log(response)
             if (response) {
                 setSongs(response)
-                toast.success('Пісні успішно отриманні')
+                setOriginalSongs(response)
+                toast.success('Пісні успішно отримані')
             }
             if (error) {
                 toast.error(
@@ -49,11 +62,11 @@ const Page = (props: Props) => {
         <div className='p-4'>
             {/** section search and download song song */}
             <div className='flex justify-between items-center'>
-                <div  className='flex gap-5'>
+                <div className='flex gap-5'>
                     <h2 className='text-4xl font-bold '>Songs</h2>
                     <button
-                    onClick={handleToggleDownload} 
-                    className='flex border-2 border-gray-400 px-3 py-2 justify-center items-center gap-2 rounded-full hover:translate-y-[-2px] duration-500 hover:text-white hover:bg-hovered'>
+                        onClick={handleToggleDownload}
+                        className='flex border-2 border-gray-400 px-3 py-2 justify-center items-center gap-2 rounded-full hover:translate-y-[-2px] duration-500 hover:text-white hover:bg-hovered'>
                         <RiDownloadCloudLine />
                         <span>Download</span>
                     </button>
@@ -67,7 +80,23 @@ const Page = (props: Props) => {
                 </div>
             </div>
             {/** download song section */}
-            {createFormIsOpen && <DownLoadSongForm/>}
+            {createFormIsOpen && <DownLoadSongForm />}
+            {/** Downloaded songs section */}
+            <div className='mt-16'>
+                <h2 className="text-2xl font-bold">Downloaded songs</h2>
+                <div className="flex flex-col gap-6 p-6">
+                    {songs?.map((song, index) => (
+                        <Song
+                            key={song._id}
+                            title={song.title}
+                            artist={song.artist}
+                            mp3={song.mp3}
+                            cover={song.cover}
+                            index={index}
+                            id={song._id} />
+                    ))}
+                </div>
+            </div>
         </div>
 
     )
