@@ -39,10 +39,12 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
     const audioSrc = currentTrack ? `${configURL.BASE_URL}/${encodeURI(currentTrack.mp3)}` : '';
 
     console.log(audioSrc)
+    //!! виправити поведінку плеєра з невибраною піснею
     return (
-        <div className="flex justify-between items-center bg-gradient-to-t from-primary to-hovered p-3 rounded-lg mt-10 text-white relative">
+        <div >
             {currentTrack && (
-                <>
+                
+                <div className="flex justify-between items-center bg-gradient-to-t from-primary to-hovered p-3 rounded-lg text-white relative">
                     <div className="flex items-center gap-6">
                         <div>
                             {currentTrack.cover ? (
@@ -89,7 +91,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                         vois
                     </div>
                     <audio src={audioSrc} preload="auto" ref={audioRef}></audio>
-                </>
+                </div>
             )}
         </div>
     );
