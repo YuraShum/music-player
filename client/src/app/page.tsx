@@ -113,6 +113,7 @@ export default function Home() {
             ))}
           </div>
         </div>
+        
 
         {/** Created playlists */}
         <div className="mt-16">
