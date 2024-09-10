@@ -52,11 +52,7 @@ export default function Home() {
 
   return (
     <div className="rounded-3xl h-full p-6">
-      <MusicPlaingItem
-        currentTrack={currentTrack}
-        isPlaying={isPlaying}
-        onPlay={handlePlay}
-        onPause={handlePause} />
+
       <h1 className="text-center text-4xl mt-3">Statistic</h1>
       <div className="flex gap-8 justify-center mt-16">
         <div className="p-[4px] relative">
@@ -107,24 +103,31 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col">
-        {/** Download music section */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold">Recently downloaded songs</h2>
-          <div className="flex flex-col gap-6 p-6">
-            {data?.songs?.map((song, index) => (
-              <Song
-                key={song._id}
-                title={song.title}
-                artist={song.artist}
-                mp3={song.mp3}
-                cover={song.cover}
-                index={index}
-                id={song._id}
-                onPlay={() => setCurrentTrack(song)}
-              />
-            ))}
+        <div className="relative max-h-[50vh] overflow-auto">
+          {/** Download music section */}
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold">Recently downloaded songs</h2>
+            <div className="flex flex-col gap-6 p-6">
+              {data?.songs?.map((song, index) => (
+                <Song
+                  key={song._id}
+                  title={song.title}
+                  artist={song.artist}
+                  mp3={song.mp3}
+                  cover={song.cover}
+                  index={index}
+                  id={song._id}
+                  onPlay={() => setCurrentTrack(song)}
+                />
+              ))}
+            </div>
           </div>
         </div>
+        <MusicPlaingItem
+            currentTrack={currentTrack}
+            isPlaying={isPlaying}
+            onPlay={handlePlay}
+            onPause={handlePause} />
 
 
         {/** Created playlists */}

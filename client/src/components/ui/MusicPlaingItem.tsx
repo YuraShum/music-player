@@ -40,7 +40,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
 
     console.log(audioSrc)
     return (
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center bg-gradient-to-t from-primary to-hovered p-3 rounded-lg mt-10 text-white relative">
             {currentTrack && (
                 <>
                     <div className="flex items-center gap-6">
@@ -56,7 +56,8 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                             <p className="text-gray-400 text-sm">{currentTrack.artist}</p>
                         </div>
                     </div>
-                    <div className="flex flex-col items-center gap-2">
+                {/** !! Переглянути абсолютне позиціювання щоб точно по центру розміщувався блок*/}
+                    <div className="flex flex-col items-center gap-2 absolute left-[45%]">
                         <div className="flex gap-6 items-center">
                             <button>
                                 <SiMixpanel className="w-4 h-4 cursor-pointer" />
@@ -83,6 +84,9 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                         <div>
                             {/* Music timeline line can be added here */}
                         </div>
+                    </div>
+                    <div>
+                        vois
                     </div>
                     <audio src={audioSrc} preload="auto" ref={audioRef}></audio>
                 </>
