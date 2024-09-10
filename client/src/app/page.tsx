@@ -8,12 +8,15 @@ import { useEffect, useState } from "react";
 import userApi from "@/api/requests/user.requests";
 import Song from "@/components/ui/Song";
 import Playlist from "@/components/ui/Playlist";
+import MusicPlaingItem from "@/components/ui/MusicPlaingItem";
 
 export default function Home() {
   const { user } = useSelector((state: any) => state.user)
 
   const [data, setData] = useState({})
   const [userRating, setUserRating] = useState(null)
+  const [currentTrack, setCurrentTrack] = useState<{ mp3: string, cover: string, artist: string, title: string } | null>(null)
+  const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,8 +47,16 @@ export default function Home() {
     fetchData();
   }, []);
 
+  const handlePlay = () => setIsPlaying(true);
+  const handlePause = () => setIsPlaying(false);
+
   return (
     <div className="rounded-3xl h-full p-6">
+      <MusicPlaingItem
+        currentTrack={currentTrack}
+        isPlaying={isPlaying}
+        onPlay={handlePlay}
+        onPause={handlePause} />
       <h1 className="text-center text-4xl mt-3">Statistic</h1>
       <div className="flex gap-8 justify-center mt-16">
         <div className="p-[4px] relative">
@@ -109,11 +120,12 @@ export default function Home() {
                 cover={song.cover}
                 index={index}
                 id={song._id}
+                onPlay={() => setCurrentTrack(song)}
               />
             ))}
           </div>
         </div>
-        
+
 
         {/** Created playlists */}
         <div className="mt-16">
