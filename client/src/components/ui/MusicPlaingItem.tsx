@@ -6,9 +6,13 @@ import { FaBackwardStep } from "react-icons/fa6";
 import { FaPlayCircle } from "react-icons/fa";
 import { FaForwardStep } from "react-icons/fa6";
 import { TiArrowLoop } from "react-icons/ti";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaCirclePause } from "react-icons/fa6";
 import configURL from '../../const/config.ts'
+import { CiVolumeHigh } from "react-icons/ci";
+import { CiVolumeMute } from "react-icons/ci";
+import { formatTime } from "@/utils/utils.ts";
+
 
 type Props = {
     currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
@@ -18,7 +22,13 @@ type Props = {
 }
 
 const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) => {
+
     const audioRef = useRef<HTMLAudioElement | null>(null);
+    const [musicVolume, setMusicVolume] = useState(0.5)
+    const [isMuteMode, setIsMuteMode] = useState(false)
+    //!! Спробувати оптимізувати 
+    const [duration, setDuration] = useState<number | null>(null)
+    const [currentTime, setCurrentTime] = useState<number>(0)
 
 
     const playAudio = () => {
@@ -36,14 +46,80 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
         }
     };
 
-    const audioSrc = currentTrack ? `${configURL.BASE_URL}/${encodeURI(currentTrack.mp3)}` : '';
 
-    console.log(audioSrc)
-    //!! виправити поведінку плеєра з невибраною піснею
+    useEffect(() => {
+        const handleError = () => {
+            console.error("Пісню не вдалося відтворити")
+        }
+        const audioElement = audioRef.current
+
+        if (audioElement) {
+            audioElement.addEventListener('error', handleError)
+            return () => {
+                audioElement.removeEventListener('error', handleError)
+            }
+        }
+    }, [])
+
+    useEffect(() => {
+        if (currentTrack && audioRef.current) {
+            audioRef.current.currentTime = 0
+            playAudio()
+        }
+    }, [currentTrack])
+
+    useEffect(() => {
+        if (currentTrack && audioRef.current) {
+            audioRef.current.volume = musicVolume
+
+        }
+    }, [musicVolume])
+
+    useEffect(() => {
+        if (audioRef.current) {
+
+            const handleLoadedMetadata = () => {
+                if (audioRef.current) {
+                    setDuration(audioRef.current.duration)
+                }
+            }
+
+            const handleTimeUpdate = () => {
+                if (audioRef.current) {
+                    setCurrentTime(audioRef.current.currentTime)
+                }
+            }
+
+            audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
+            audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
+
+            return () => {
+                if (audioRef.current) {
+                    audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
+                    audioRef.current.removeEventListener('timeupdate', handleTimeUpdate);
+                }
+            };
+
+        }
+    }, [currentTrack])
+
+
+    const handleMuteMode = () => {
+        setIsMuteMode(true)
+        setMusicVolume(0)
+    }
+    const handleLoudMode = () => {
+        setIsMuteMode(false)
+        setMusicVolume(0.5)
+    }
+
+    const audioSrc = currentTrack ? `${configURL.BASE_URL}/${currentTrack.mp3}` : '';
+    const progresWidthPercent = duration ? (currentTime / duration) * 100 : 0;
+
     return (
         <div >
             {currentTrack && (
-                
+
                 <div className="flex justify-between items-center bg-gradient-to-t from-primary to-hovered p-3 rounded-lg text-white relative">
                     <div className="flex items-center gap-6">
                         <div>
@@ -58,8 +134,8 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                             <p className="text-gray-400 text-sm">{currentTrack.artist}</p>
                         </div>
                     </div>
-                {/** !! Переглянути абсолютне позиціювання щоб точно по центру розміщувався блок*/}
-                    <div className="flex flex-col items-center gap-2 absolute left-[45%]">
+                    {/** !! Переглянути абсолютне позиціювання щоб точно по центру розміщувався блок*/}
+                    <div className="flex flex-col items-center gap-3 justify-center">
                         <div className="flex gap-6 items-center">
                             <button>
                                 <SiMixpanel className="w-4 h-4 cursor-pointer" />
@@ -83,14 +159,40 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                                 <TiArrowLoop className="w-6 h-6 cursor-pointer" />
                             </button>
                         </div>
-                        <div>
+                        <div className="flex items-center gap-2">
                             {/* Music timeline line can be added here */}
+                            <span className="text-sm opacity-60">{formatTime(currentTime)}</span>
+                            <div className="relative">
+                            <div className="h-1 bg-white w-[30vw] opacity-50 rounded-md"></div>
+                            <div className="h-1 bg-white rounded-md absolute top-0"
+                            style={{width: `${progresWidthPercent}%`, maxWidth: '30vw'}}></div>
+                            </div>
+                            
+                            <span className="text-sm opacity-60">{formatTime(duration)}</span>
                         </div>
                     </div>
-                    <div>
-                        vois
+                    <div className="flex gap-3 items-center justify-center">
+
+                        {isMuteMode ?
+                            <CiVolumeMute
+                                className="w-6 h-6 cursor-pointer"
+                                onClick={handleLoudMode}
+                            /> :
+                            <CiVolumeHigh
+                                className="w-6 h-6 cursor-pointer"
+                                onClick={handleMuteMode} />
+                        }
+                        <input
+                            className="accent-white w-[50%] h-[5px]"
+                            type="range"
+                            name="volume"
+                            value={musicVolume}
+                            min={0}
+                            max={1}
+                            step={0.02}
+                            onChange={(e) => setMusicVolume(e.target.value)} />
                     </div>
-                    <audio src={audioSrc} preload="auto" ref={audioRef}></audio>
+                    <audio src={audioSrc} preload="auto" ref={audioRef} className="w-full h-6"></audio>
                 </div>
             )}
         </div>
