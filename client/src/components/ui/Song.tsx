@@ -7,8 +7,7 @@ import songApi from '@/api/requests/song.requests';
 import { toast } from 'react-toastify';
 import { FaPlayCircle } from "react-icons/fa";
 import { useState } from 'react';
-import MusicPlaingItem from './MusicPlaingItem';
-
+import { FaCirclePause } from "react-icons/fa6";
 
 type Props = {
     artist: string,
@@ -17,10 +16,13 @@ type Props = {
     title: string,
     index: number,
     id: string,
-    onPlay: () => void
+    onPlay: () => void,
+    currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
+    isPlaying: boolean
+
 }
 
-const Song = ({ artist, cover, mp3, title, index, id, onPlay }: Props) => {
+const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying }: Props) => {
 
     const [musicIsPlay, setMusicIsPlay] = useState(false)
 
@@ -39,6 +41,10 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay }: Props) => {
         onPlay()
         setMusicIsPlay(true)
     }
+    const handleMusicISPausing = () =>{
+        setMusicIsPlay(false)
+    } 
+    const isCurrentTrack = currentTrack && currentTrack.mp3 === mp3 && currentTrack.title === title
 
     return (
         <div>
@@ -49,9 +55,16 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay }: Props) => {
                         <img src={cover} alt='song title' /> :
                         <SiMusicbrainz style={{ color: getRandomHexColor() }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
                     }
-                    <FaPlayCircle
-                        className='w-8 h-8 cursor-pointer text-primary'
-                        onClick={handleMusicIsPlaying} />
+                    {isCurrentTrack &&  isPlaying ?
+                        <FaCirclePause
+                         className='w-8 h-8 cursor-pointer text-primary'
+                         onClick={handleMusicISPausing}
+                        />
+                        :
+                        <FaPlayCircle
+                            className='w-8 h-8 cursor-pointer text-primary'
+                            onClick={handleMusicIsPlaying} />}
+
                     <div className='flex flex-col'>
                         <h2 className='text-lg font-bold'>{title}</h2>
                         <div className='flex gap-2 items-center text-gray-400'>

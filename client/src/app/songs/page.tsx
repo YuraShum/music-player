@@ -8,6 +8,7 @@ import { IoIosSearch } from "react-icons/io";
 import { RiDownloadCloudLine } from "react-icons/ri";
 import DownLoadSongForm from '@/components/ui/forms/DownLoadSongForm'
 import Song from '@/components/ui/Song'
+import MusicPlaingItem from '@/components/ui/MusicPlaingItem'
 
 type Props = {}
 
@@ -18,6 +19,9 @@ const Page = (props: Props) => {
     const [originalSongs, setOriginalSongs] = useState(null) // Додаємо стан для оригінального списку пісень
     const [searchValue, setSearchValue] = useState('')
     const [createFormIsOpen, setCreateFromIsOpen] = useState(false)
+
+    const [currentTrack, setCurrentTrack] = useState<{ mp3: string, cover: string, artist: string, title: string } | null>(null)
+    const [isPlaying, setIsPlaying] = useState(false)
 
     const handleChangeSearchValue = (event) => {
         const searchTerm = event.target.value.toLowerCase();
@@ -57,9 +61,11 @@ const Page = (props: Props) => {
     const handleToggleDownload = () => {
         setCreateFromIsOpen(prevValue => !prevValue)
     }
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
 
     return (
-        <div className='p-4'>
+        <div className='p-4 h-[95vh] overflow-auto'>
             {/** section search and download song song */}
             <div className='flex justify-between items-center'>
                 <div className='flex gap-5'>
@@ -84,7 +90,7 @@ const Page = (props: Props) => {
             {/** Downloaded songs section */}
             <div className='mt-16'>
                 <h2 className="text-2xl font-bold">Downloaded songs</h2>
-                <div className="flex flex-col gap-6 p-6">
+                <div className="flex flex-col gap-6 p-6 h-full max-h-[70vh] overflow-auto">
                     {songs?.map((song, index) => (
                         <Song
                             key={song._id}
@@ -93,10 +99,19 @@ const Page = (props: Props) => {
                             mp3={song.mp3}
                             cover={song.cover}
                             index={index}
-                            id={song._id} />
+                            id={song._id}
+                            onPlay={() => setCurrentTrack(song)}
+                            currentTrack={currentTrack}
+                            isPlaying={isPlaying}
+                            />
                     ))}
                 </div>
             </div>
+            <MusicPlaingItem
+                currentTrack={currentTrack}
+                isPlaying={isPlaying}
+                onPlay={handlePlay}
+                onPause={handlePause} />
         </div>
 
     )
