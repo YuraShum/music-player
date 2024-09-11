@@ -51,7 +51,7 @@ export default function Home() {
   const handlePause = () => setIsPlaying(false);
 
   return (
-    <div className="rounded-3xl h-full p-6">
+    <div className="rounded-3xl h-[95vh] overflow-auto p-6">
 
       <h1 className="text-center text-4xl mt-3">Statistic</h1>
       <div className="flex gap-8 justify-center mt-16">
@@ -102,7 +102,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col relative">
         <div className="mt-20">
           {/** Download music section */}
           <h2 className="text-2xl font-bold absolute mt-[-35px]">Recently downloaded songs</h2>
@@ -119,6 +119,8 @@ export default function Home() {
                   index={index}
                   id={song._id}
                   onPlay={() => setCurrentTrack(song)}
+                  currentTrack={currentTrack}
+                  isPlaying={isPlaying}
                 />
               ))}
             </div>
