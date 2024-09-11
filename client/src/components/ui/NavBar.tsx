@@ -5,7 +5,7 @@ type Props = {}
 
 const NavBar = (props: Props) => {
     return (
-        <div className='p-6 flex flex-col relative justify-center items-center gap-6'>
+        <div className='p-6 flex flex-col relative justify-center items-center gap-6 max-h-[100vh]'>
             {NAV_BAR_CONFIG.map((item, index) => (
                 <a
                     href={item.link}

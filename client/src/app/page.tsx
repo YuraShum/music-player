@@ -103,10 +103,11 @@ export default function Home() {
       </div>
 
       <div className="flex flex-col">
-        <div className="relative max-h-[50vh] overflow-auto">
+        <div className="mt-20">
           {/** Download music section */}
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold">Recently downloaded songs</h2>
+          <h2 className="text-2xl font-bold absolute mt-[-35px]">Recently downloaded songs</h2>
+          <div className="relative max-h-[40vh] overflow-auto ">
+            
             <div className="flex flex-col gap-6 p-6">
               {data?.songs?.map((song, index) => (
                 <Song
