@@ -28,14 +28,17 @@ const SigninForm = (props: Props) => {
         const { response, error } = await userApi.userSignIn(values)
         if (response) {
             reset()
+            // console.log("response sign in ", response.genToken)
+            //!! перевірити чи безпечно це робити 
+            localStorage.setItem('activationToken', response.genToken);
             dispatch(setUser(response))
             dispatch(setAuthUser(false))
             toast.success('Вхід дозволений!!')
         }
-        if(error)
+        if (error)
             console.log(error)
         toast.error(
-           'щось пішло не так'
+            'щось пішло не так'
         )
     }
 

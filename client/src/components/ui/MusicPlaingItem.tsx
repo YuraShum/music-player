@@ -183,7 +183,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                                 onClick={handleMuteMode} />
                         }
                         <input
-                            className="accent-white w-[50%] h-[5px]"
+                            className="accent-white w-[50%] h-[5px] cursor-pointer"
                             type="range"
                             name="volume"
                             value={musicVolume}

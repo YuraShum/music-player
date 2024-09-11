@@ -18,11 +18,13 @@ type Props = {
     id: string,
     onPlay: () => void,
     currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
-    isPlaying: boolean
+    isPlaying: boolean,
 
 }
 
-const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying }: Props) => {
+//!! баг не можна зупиняти та відтвворювати пісні в списку пісень (почергово можна перебирати, а
+//!! зупиняти та відновлювати один і той самий трек неможливо)
+const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying, onPause }: Props) => {
 
     const [musicIsPlay, setMusicIsPlay] = useState(false)
 
@@ -41,9 +43,9 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
         onPlay()
         setMusicIsPlay(true)
     }
-    const handleMusicISPausing = () =>{
+    const handleMusicISPausing = () => {
         setMusicIsPlay(false)
-    } 
+    }
     const isCurrentTrack = currentTrack && currentTrack.mp3 === mp3 && currentTrack.title === title
 
     return (
@@ -55,10 +57,10 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                         <img src={cover} alt='song title' /> :
                         <SiMusicbrainz style={{ color: getRandomHexColor() }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
                     }
-                    {isCurrentTrack &&  isPlaying ?
+                    {isCurrentTrack && isPlaying ?
                         <FaCirclePause
-                         className='w-8 h-8 cursor-pointer text-primary'
-                         onClick={handleMusicISPausing}
+                            className='w-8 h-8 cursor-pointer text-primary'
+                            onClick={handleMusicISPausing}
                         />
                         :
                         <FaPlayCircle
