@@ -12,6 +12,7 @@ import configURL from '../../const/config.ts'
 import { CiVolumeHigh } from "react-icons/ci";
 import { CiVolumeMute } from "react-icons/ci";
 import { formatTime } from "@/utils/utils.ts";
+import useCyclicalPlayback from "@/hooks/useCyclicalPlayback.ts";
 
 
 type Props = {
@@ -29,6 +30,15 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
     //!! Спробувати оптимізувати 
     const [duration, setDuration] = useState<number | null>(null)
     const [currentTime, setCurrentTime] = useState<number>(0)
+    const [fixation, setFixation] = useState(false)
+
+    useCyclicalPlayback(audioRef, onPlay, fixation)
+
+    const handleFixation = () => {
+        setFixation(prevValue => !prevValue)
+    }
+
+    
 
 
     const playAudio = () => {
@@ -156,7 +166,8 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                                 <FaForwardStep className="w-6 h-6 cursor-pointer" />
                             </button>
                             <button>
-                                <TiArrowLoop className="w-6 h-6 cursor-pointer" />
+                                <TiArrowLoop className={`w-6 h-6 cursor-pointer`} style={{color: `${fixation ? "#e28743" : 'white'}`}}
+                                onClick={handleFixation} />
                             </button>
                         </div>
                         <div className="flex items-center gap-2">
