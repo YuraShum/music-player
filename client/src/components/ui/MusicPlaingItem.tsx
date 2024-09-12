@@ -19,10 +19,12 @@ type Props = {
     currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
     isPlaying: boolean,
     onPlay: () => void,
-    onPause: () => void
+    onPause: () => void,
+    nextTrack: () => void,
+    previousTrack: () => void
 }
 
-const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) => {
+const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, previousTrack }: Props) => {
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [musicVolume, setMusicVolume] = useState(0.5)
@@ -38,7 +40,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
         setFixation(prevValue => !prevValue)
     }
 
-    
+    console.log('Previos hand', previousTrack)
 
 
     const playAudio = () => {
@@ -123,6 +125,13 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
         setMusicVolume(0.5)
     }
 
+    const handlePrevTrack = () => {
+        console.log('prev')
+        previousTrack()
+    }
+
+    
+
     const audioSrc = currentTrack ? `${configURL.BASE_URL}/${currentTrack.mp3}` : '';
     const progresWidthPercent = duration ? (currentTime / duration) * 100 : 0;
 
@@ -150,8 +159,10 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                             <button>
                                 <SiMixpanel className="w-4 h-4 cursor-pointer" />
                             </button>
-                            <button >
-                                <FaBackwardStep className="w-6 h-6 cursor-pointer" />
+                            <button
+                                onClick={handlePrevTrack}>
+                                <FaBackwardStep
+                                    className="w-6 h-6 cursor-pointer" />
                             </button>
                             {isPlaying ? (
                                 <button onClick={pauseAudio}>
@@ -162,23 +173,24 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause }: Props) =>
                                     <FaPlayCircle className="w-6 h-6 scale-150 cursor-pointer" />
                                 </button>
                             )}
-                            <button >
+                            <button 
+                            onClick={nextTrack}>
                                 <FaForwardStep className="w-6 h-6 cursor-pointer" />
                             </button>
                             <button>
-                                <TiArrowLoop className={`w-6 h-6 cursor-pointer`} style={{color: `${fixation ? "#e28743" : 'white'}`}}
-                                onClick={handleFixation} />
+                                <TiArrowLoop className={`w-6 h-6 cursor-pointer`} style={{ color: `${fixation ? "#e28743" : 'white'}` }}
+                                    onClick={handleFixation} />
                             </button>
                         </div>
                         <div className="flex items-center gap-2">
                             {/* Music timeline line can be added here */}
                             <span className="text-sm opacity-60">{formatTime(currentTime)}</span>
                             <div className="relative">
-                            <div className="h-1 bg-white w-[30vw] opacity-50 rounded-md"></div>
-                            <div className="h-1 bg-white rounded-md absolute top-0"
-                            style={{width: `${progresWidthPercent}%`, maxWidth: '30vw'}}></div>
+                                <div className="h-1 bg-white w-[30vw] opacity-50 rounded-md"></div>
+                                <div className="h-1 bg-white rounded-md absolute top-0"
+                                    style={{ width: `${progresWidthPercent}%`, maxWidth: '30vw' }}></div>
                             </div>
-                            
+
                             <span className="text-sm opacity-60">{formatTime(duration)}</span>
                         </div>
                     </div>

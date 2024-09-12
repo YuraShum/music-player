@@ -50,6 +50,26 @@ export default function Home() {
   const handlePlay = () => setIsPlaying(true);
   const handlePause = () => setIsPlaying(false);
 
+  const handlePreviousTrack = () => {
+    console.log("Prev Track")
+    if (!currentTrack || data?.songs?.length === 0) return
+
+    const currentIndex = data?.songs?.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
+    const previosIndex = (currentIndex - 1 + data?.songs?.length) % data?.songs?.length;
+    console.log("previos index", previosIndex)
+    setCurrentTrack(data?.songs?.[previosIndex])
+  }
+
+  const handleNextTrack = () => {
+    if (!currentTrack || data?.songs?.length === 0) return
+    const currentIndex = data?.songs?.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
+    const nextIndex = (currentIndex + 1) % data?.songs?.length;
+    console.log("Next index", nextIndex)
+    setCurrentTrack(data?.songs?.[nextIndex])
+  }
+
+
+
   return (
     <div className="rounded-3xl h-[95vh] overflow-auto p-6">
 
@@ -107,7 +127,7 @@ export default function Home() {
           {/** Download music section */}
           <h2 className="text-2xl font-bold absolute mt-[-35px]">Recently downloaded songs</h2>
           <div className="relative max-h-[40vh] overflow-auto ">
-            
+
             <div className="flex flex-col gap-6 p-6">
               {data?.songs?.map((song, index) => (
                 <Song
@@ -127,10 +147,12 @@ export default function Home() {
           </div>
         </div>
         <MusicPlaingItem
-            currentTrack={currentTrack}
-            isPlaying={isPlaying}
-            onPlay={handlePlay}
-            onPause={handlePause} />
+          currentTrack={currentTrack}
+          isPlaying={isPlaying}
+          onPlay={handlePlay}
+          onPause={handlePause}
+          previousTrack={handlePreviousTrack}
+          nextTrack={handleNextTrack} />
 
 
         {/** Created playlists */}

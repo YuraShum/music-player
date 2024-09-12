@@ -16,7 +16,7 @@ const Page = (props: Props) => {
     const { user } = useSelector((state: any) => state.user)
 
     const [songs, setSongs] = useState(null)
-    const [originalSongs, setOriginalSongs] = useState(null) // Додаємо стан для оригінального списку пісень
+    const [originalSongs, setOriginalSongs] = useState(null)
     const [searchValue, setSearchValue] = useState('')
     const [createFormIsOpen, setCreateFromIsOpen] = useState(false)
 
@@ -63,6 +63,24 @@ const Page = (props: Props) => {
     }
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
+
+    const handlePreviousTrack  = () => {
+        console.log("Prev Track")
+        if(!currentTrack || songs.length === 0 ) return
+
+        const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
+        const previosIndex = (currentIndex - 1 + songs.length) % songs.length;
+        console.log("previos index", previosIndex)
+        setCurrentTrack(songs[previosIndex])
+    }
+
+    const handleNextTrack = () => {
+        if(!currentTrack || songs.length === 0 ) return
+        const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
+        const nextIndex = (currentIndex + 1) % songs.length; 
+        console.log("Next index", nextIndex)
+        setCurrentTrack(songs[nextIndex])
+    }
 
     return (
         <div className='p-4 h-[95vh] overflow-auto'>
@@ -111,7 +129,9 @@ const Page = (props: Props) => {
                 currentTrack={currentTrack}
                 isPlaying={isPlaying}
                 onPlay={handlePlay}
-                onPause={handlePause} />
+                onPause={handlePause} 
+                nextTrack = {handleNextTrack}
+                previousTrack = {handlePreviousTrack }/>
         </div>
 
     )
