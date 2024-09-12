@@ -9,6 +9,7 @@ import { RiDownloadCloudLine } from "react-icons/ri";
 import DownLoadSongForm from '@/components/ui/forms/DownLoadSongForm'
 import Song from '@/components/ui/Song'
 import MusicPlaingItem from '@/components/ui/MusicPlaingItem'
+import { randomNonRepeatingIndex } from '@/utils/utils'
 
 type Props = {}
 
@@ -64,9 +65,9 @@ const Page = (props: Props) => {
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
 
-    const handlePreviousTrack  = () => {
+    const handlePreviousTrack = () => {
         console.log("Prev Track")
-        if(!currentTrack || songs.length === 0 ) return
+        if (!currentTrack || songs.length === 0) return
 
         const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
         const previosIndex = (currentIndex - 1 + songs.length) % songs.length;
@@ -75,11 +76,19 @@ const Page = (props: Props) => {
     }
 
     const handleNextTrack = () => {
-        if(!currentTrack || songs.length === 0 ) return
+        if (!currentTrack || songs.length === 0) return
         const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
-        const nextIndex = (currentIndex + 1) % songs.length; 
+        const nextIndex = (currentIndex + 1) % songs.length;
         console.log("Next index", nextIndex)
         setCurrentTrack(songs[nextIndex])
+    }
+
+    const handleNextRandomTrack = () => {
+        if (!currentTrack || songs.length === 0) return
+        const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
+        const newIndex = randomNonRepeatingIndex(currentIndex, songs.length)
+        console.log("Next random index", newIndex)
+        setCurrentTrack(songs[newIndex])
     }
 
     return (
@@ -121,7 +130,7 @@ const Page = (props: Props) => {
                             onPlay={() => setCurrentTrack(song)}
                             currentTrack={currentTrack}
                             isPlaying={isPlaying}
-                            />
+                        />
                     ))}
                 </div>
             </div>
@@ -129,9 +138,10 @@ const Page = (props: Props) => {
                 currentTrack={currentTrack}
                 isPlaying={isPlaying}
                 onPlay={handlePlay}
-                onPause={handlePause} 
-                nextTrack = {handleNextTrack}
-                previousTrack = {handlePreviousTrack }/>
+                onPause={handlePause}
+                nextTrack={handleNextTrack}
+                previousTrack={handlePreviousTrack} 
+                nextRandomTrack={handleNextRandomTrack}/>
         </div>
 
     )

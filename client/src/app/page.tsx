@@ -9,6 +9,7 @@ import userApi from "@/api/requests/user.requests";
 import Song from "@/components/ui/Song";
 import Playlist from "@/components/ui/Playlist";
 import MusicPlaingItem from "@/components/ui/MusicPlaingItem";
+import { randomNonRepeatingIndex } from "@/utils/utils";
 
 export default function Home() {
   const { user } = useSelector((state: any) => state.user)
@@ -68,7 +69,13 @@ export default function Home() {
     setCurrentTrack(data?.songs?.[nextIndex])
   }
 
-
+  const handleNextRandomTrack = () => {
+    if (!currentTrack || data?.songs?.length === 0) return
+    const currentIndex = data?.songs?.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
+    const newIndex = randomNonRepeatingIndex(currentIndex, data?.songs?.length)
+    console.log("Next random index", newIndex)
+    setCurrentTrack(data?.songs?.[newIndex])
+  }
 
   return (
     <div className="rounded-3xl h-[95vh] overflow-auto p-6">
@@ -152,7 +159,8 @@ export default function Home() {
           onPlay={handlePlay}
           onPause={handlePause}
           previousTrack={handlePreviousTrack}
-          nextTrack={handleNextTrack} />
+          nextTrack={handleNextTrack} 
+          nextRandomTrack = {handleNextRandomTrack}/>
 
 
         {/** Created playlists */}

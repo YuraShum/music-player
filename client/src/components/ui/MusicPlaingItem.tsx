@@ -13,6 +13,7 @@ import { CiVolumeHigh } from "react-icons/ci";
 import { CiVolumeMute } from "react-icons/ci";
 import { formatTime } from "@/utils/utils.ts";
 import useCyclicalPlayback from "@/hooks/useCyclicalPlayback.ts";
+import useRandomTrackPlayback from "@/hooks/useRandomTrackPlayback.ts";
 
 
 type Props = {
@@ -21,10 +22,11 @@ type Props = {
     onPlay: () => void,
     onPause: () => void,
     nextTrack: () => void,
-    previousTrack: () => void
+    previousTrack: () => void,
+    nextRandomTrack: () => void
 }
 
-const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, previousTrack }: Props) => {
+const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, previousTrack, nextRandomTrack }: Props) => {
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [musicVolume, setMusicVolume] = useState(0.5)
@@ -32,15 +34,13 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
     //!! Спробувати оптимізувати 
     const [duration, setDuration] = useState<number | null>(null)
     const [currentTime, setCurrentTime] = useState<number>(0)
-    const [fixation, setFixation] = useState(false)
+    const [fixation, setFixation] = useState({
+        loop: false,
+        random: false
+    })
 
-    useCyclicalPlayback(audioRef, onPlay, fixation)
-
-    const handleFixation = () => {
-        setFixation(prevValue => !prevValue)
-    }
-
-    console.log('Previos hand', previousTrack)
+    useCyclicalPlayback(audioRef, onPlay, fixation.loop)
+    useRandomTrackPlayback({ audioRef, nextRandomTrack, randomeMode: fixation.random })
 
 
     const playAudio = () => {
@@ -125,12 +125,24 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
         setMusicVolume(0.5)
     }
 
-    const handlePrevTrack = () => {
-        console.log('prev')
-        previousTrack()
+    const handleFixationLoop = () => {
+        setFixation(prevValue => {
+            return {
+                random: false,
+                loop: !prevValue.loop
+            }
+        })
     }
 
-    
+    const handleFixationRandom = () => {
+        setFixation(prevValue => {
+            return {
+                random: !prevValue.random,
+                loop: false
+            }
+        })
+    }
+
 
     const audioSrc = currentTrack ? `${configURL.BASE_URL}/${currentTrack.mp3}` : '';
     const progresWidthPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -156,11 +168,14 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                     {/** !! Переглянути абсолютне позиціювання щоб точно по центру розміщувався блок*/}
                     <div className="flex flex-col items-center gap-3 justify-center">
                         <div className="flex gap-6 items-center">
-                            <button>
-                                <SiMixpanel className="w-4 h-4 cursor-pointer" />
+                            <button
+                                onClick={handleFixationRandom}>
+                                <SiMixpanel 
+                                className="w-4 h-4 cursor-pointer" 
+                                style={{ color: `${fixation.random ? "#e28743" : 'white'}` }}/>
                             </button>
                             <button
-                                onClick={handlePrevTrack}>
+                                onClick={previousTrack}>
                                 <FaBackwardStep
                                     className="w-6 h-6 cursor-pointer" />
                             </button>
@@ -173,13 +188,13 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                                     <FaPlayCircle className="w-6 h-6 scale-150 cursor-pointer" />
                                 </button>
                             )}
-                            <button 
-                            onClick={nextTrack}>
+                            <button
+                                onClick={nextTrack}>
                                 <FaForwardStep className="w-6 h-6 cursor-pointer" />
                             </button>
                             <button>
-                                <TiArrowLoop className={`w-6 h-6 cursor-pointer`} style={{ color: `${fixation ? "#e28743" : 'white'}` }}
-                                    onClick={handleFixation} />
+                                <TiArrowLoop className={`w-6 h-6 cursor-pointer`} style={{ color: `${fixation.loop ? "#e28743" : 'white'}` }}
+                                    onClick={handleFixationLoop} />
                             </button>
                         </div>
                         <div className="flex items-center gap-2">
