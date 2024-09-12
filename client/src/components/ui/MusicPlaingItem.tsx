@@ -6,7 +6,7 @@ import { FaBackwardStep } from "react-icons/fa6";
 import { FaPlayCircle } from "react-icons/fa";
 import { FaForwardStep } from "react-icons/fa6";
 import { TiArrowLoop } from "react-icons/ti";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { FaCirclePause } from "react-icons/fa6";
 import configURL from '../../const/config.ts'
 import { CiVolumeHigh } from "react-icons/ci";
@@ -143,6 +143,15 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
         })
     }
 
+    const handleProgressChange = (event: ChangeEvent<HTMLInputElement>) => {
+        const newTime = Number(event.target.value)
+        if (audioRef.current) {
+            audioRef.current.currentTime = newTime
+            setCurrentTime(newTime)
+        }
+
+    }
+
 
     const audioSrc = currentTrack ? `${configURL.BASE_URL}/${currentTrack.mp3}` : '';
     const progresWidthPercent = duration ? (currentTime / duration) * 100 : 0;
@@ -152,7 +161,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
             {currentTrack && (
 
                 <div className="flex justify-between items-center bg-gradient-to-t from-primary to-hovered p-3 rounded-lg text-white relative">
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-6 w-full max-w-[300px]">
                         <div>
                             {currentTrack.cover ? (
                                 <img src={currentTrack.cover} alt={currentTrack.title} className="w-16 h-16 rounded-xl" />
@@ -170,9 +179,9 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                         <div className="flex gap-6 items-center">
                             <button
                                 onClick={handleFixationRandom}>
-                                <SiMixpanel 
-                                className="w-4 h-4 cursor-pointer" 
-                                style={{ color: `${fixation.random ? "#e28743" : 'white'}` }}/>
+                                <SiMixpanel
+                                    className="w-4 h-4 cursor-pointer"
+                                    style={{ color: `${fixation.random ? "#e28743" : 'white'}` }} />
                             </button>
                             <button
                                 onClick={previousTrack}>
@@ -200,10 +209,18 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                         <div className="flex items-center gap-2">
                             {/* Music timeline line can be added here */}
                             <span className="text-sm opacity-60">{formatTime(currentTime)}</span>
-                            <div className="relative">
-                                <div className="h-1 bg-white w-[30vw] opacity-50 rounded-md"></div>
-                                <div className="h-1 bg-white rounded-md absolute top-0"
-                                    style={{ width: `${progresWidthPercent}%`, maxWidth: '30vw' }}></div>
+                            <div className="relative w-[30vw]">
+                                <input
+                                    type="range"
+                                    min={0}
+                                    max={duration || 0}
+                                    step={0.02}
+                                    value={currentTime}
+                                    onChange={handleProgressChange}
+                                    className="w-full  h-1 bg-transparent cursor-pointer accent-white" />
+                                <div>
+
+                                </div>
                             </div>
 
                             <span className="text-sm opacity-60">{formatTime(duration)}</span>
