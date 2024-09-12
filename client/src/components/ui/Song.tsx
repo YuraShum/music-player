@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import { FaPlayCircle } from "react-icons/fa";
 import { useState } from 'react';
 import { FaCirclePause } from "react-icons/fa6";
+import configURL from '../../const/config.ts'
 
 type Props = {
     artist: string,
@@ -24,10 +25,11 @@ type Props = {
 
 //!! баг не можна зупиняти та відтвворювати пісні в списку пісень (почергово можна перебирати, а
 //!! зупиняти та відновлювати один і той самий трек неможливо)
-const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying, onPause }: Props) => {
+const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying }: Props) => {
 
     const [musicIsPlay, setMusicIsPlay] = useState(false)
-
+    const coverSrc = cover ? `${configURL.BASE_URL}/${cover}` : ''
+    console.log(cover)
     const handleDeleteSong = async () => {
         const { response, error } = await songApi.deleteSong({ songId: id });
 
@@ -54,7 +56,7 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                 <div className='flex items-center gap-8'>
                     <span className='text-xl font-bold text-gray-400'>{9 >= index && 0}{index + 1}</span>
                     {cover ?
-                        <img src={cover} alt='song title' /> :
+                        <img src={coverSrc} alt='song title'  className='w-16 h-16 bg-gray-200 rounded-xl'/> :
                         <SiMusicbrainz style={{ color: getRandomHexColor() }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
                     }
                     {isCurrentTrack && isPlaying ?

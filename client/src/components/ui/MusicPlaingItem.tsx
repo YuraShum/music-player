@@ -154,7 +154,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
 
 
     const audioSrc = currentTrack ? `${configURL.BASE_URL}/${currentTrack.mp3}` : '';
-    const progresWidthPercent = duration ? (currentTime / duration) * 100 : 0;
+
 
     return (
         <div >
@@ -164,7 +164,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                     <div className="flex items-center gap-6 w-full max-w-[300px]">
                         <div>
                             {currentTrack.cover ? (
-                                <img src={currentTrack.cover} alt={currentTrack.title} className="w-16 h-16 rounded-xl" />
+                                <img src={`${configURL.BASE_URL}/${currentTrack.cover}`} alt={currentTrack.title} className="w-16 h-16 rounded-xl" />
                             ) : (
                                 <FaRegUser style={{ color: '#363558', backgroundColor: '#E0E0E0' }} className="w-16 h-16 bg-gray-200 rounded-xl" />
                             )}
