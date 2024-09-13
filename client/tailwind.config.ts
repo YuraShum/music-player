@@ -16,7 +16,8 @@ const config: Config = {
       colors: {
         primary: "#363558",
         custom: "#fbfbfb",
-        hovered: "#7c7cac"
+        hovered: "#7c7cac",
+        link: '#e28743'
       },
       animation: {
         shimmer: "shimmer 2s linear infinite",

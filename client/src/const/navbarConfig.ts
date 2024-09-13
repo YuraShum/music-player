@@ -20,7 +20,7 @@ const NAV_BAR_CONFIG: NavigateItem[] = [
     },
     {
         icon: RiHome2Fill,
-        link: '/home',
+        link: '/',
     },
     {
         icon: IoMusicalNotes,

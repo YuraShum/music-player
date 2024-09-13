@@ -9,7 +9,7 @@ export interface DeleteSongParams {
 export interface CreatePlaylistParams {
     name: string,
     description: string,
-    songs: string
+    songs: string[]
 }
 
 export interface PlaylistSongActionParams {
