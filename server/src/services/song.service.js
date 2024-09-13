@@ -9,7 +9,8 @@ class SongService {
         try {
             const { title, artist } = request.body;
             const userId = request.user.id;
-            console.log(userId)
+            console.log(request.body)
+            console.log('Request Files:', request.files); 
             let song = await songModel.findOne({ title, artist });
 
             if (song) {
@@ -60,9 +61,30 @@ class SongService {
             console.log("userId", request.user.id)
             const userId = request.user.id
             const songs = await songModel.find({ uploadedBy: userId })
-            responseHendlers.created(response, songs)
+            responseHendlers.ok(response, songs)
         } catch (error) {
             responseHendlers.error(response)
+        }
+    }
+
+    async getSongsInformation(request, response) {
+        try {
+            const { songsId } = request.body;
+            const userId = request.user.id;
+    
+            if (!Array.isArray(songsId) || songsId.length === 0) {
+                return responseHendlers.badRequest(response, 'Некоректний масив ідентифікаторів пісень.');
+            }
+    
+            const songs = await songModel.find({
+                _id: { $in: songsId },
+                uploadedBy: userId
+            });
+    
+            responseHendlers.ok(response, songs);
+        } catch (error) {
+            console.error(error);
+            responseHendlers.error(response);
         }
     }
 

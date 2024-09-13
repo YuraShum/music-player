@@ -29,6 +29,16 @@ router.get(
     songService.getUserSongs.bind(songService)
 )
 
+router.get(
+    '/songsInformation',
+    tokenMidleware.authMiddleware,
+    body('songsId')
+        .exists()
+        .withMessage("Необхідний масив ідентифікаторів пісень для отримання інформації"),
+        validator,
+        songService.getSongsInformation.bind(songService)
+)
+
 router.delete(
     '/song',
     tokenMidleware.authMiddleware,
