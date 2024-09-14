@@ -35,8 +35,8 @@ router.get(
     body('songsId')
         .exists()
         .withMessage("Необхідний масив ідентифікаторів пісень для отримання інформації"),
-        validator,
-        songService.getSongsInformation.bind(songService)
+    validator,
+    songService.getSongsInformation.bind(songService)
 )
 
 router.delete(

@@ -27,14 +27,15 @@ const DownLoadSongForm = (props: Props) => {
         formData.append('artist', values.artist);
 
         // Додаємо файл пісні mp3
-        if (values.mp3 && values.mp3[0]) {
-            formData.append('mp3', values.mp3[0]);
+        console.log(values.mp3)
+        if (values.mp3 && values?.mp3[0]) {
+            formData.append('mp3', values?.mp3);
         } else {
-            toast.error('Необхідно завантажити файл пісні mp3.');
+            toast.error('Необхідно завантажити файл пісні mp3');
             return;
         }
-        if (values.cover && values.cover[0]) {
-            formData.append('cover', values.cover[0]);
+        if (values.cover && values?.cover[0]) {
+            formData.append('cover', values?.cover[0]);
         }
         
 

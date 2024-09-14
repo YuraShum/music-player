@@ -1,5 +1,5 @@
-import { DeleteSongParams, SongParams } from "@/interfaces/apiInterfaces"
-import songEndpointsConfig from "../endpoints/cong/config"
+import { DeleteSongParams, GetSongsInformationParams, SongParams } from "@/interfaces/apiInterfaces"
+import songEndpointsConfig from "../endpoints/song/config"
 import privateUser from "../user/private"
 
 
@@ -7,15 +7,15 @@ import privateUser from "../user/private"
 
 
 const songApi = {
-    addSong: async ({title, artist}: SongParams) => {
+    addSong: async (formData: FormData) => {
         try {
             const response = await privateUser.post(
                 songEndpointsConfig.addSong,
-                {title, artist}
+                formData
             )
-            return {response}
+            return { response }
         } catch (error) {
-            return {error}
+            return { error }
         }
     },
     getUserSongs: async () => {
@@ -23,22 +23,38 @@ const songApi = {
             const response = await privateUser.get(
                 songEndpointsConfig.getUserSong
             )
-            return {response}
+            return { response }
         } catch (error) {
-            return {error}
+            return { error }
         }
     },
-    deleteSong: async ({songId}: DeleteSongParams) => {
+    getSongsInformation: async ( songsId : GetSongsInformationParams) => {
+        console.log("songsId", songsId);
+
+        try {
+            const stringArray = 
+            const response = await privateUser.get(
+                songEndpointsConfig.getSongsInfromation,
+                {
+                    data: {songsId}
+                }
+            );
+            return { response };
+        } catch (error) {
+            return { error };
+        }
+    },
+    deleteSong: async ({ songId }: DeleteSongParams) => {
         try {
             const response = await privateUser.delete(
                 songEndpointsConfig.deleteSong,
                 {
-                    data: {songId}
+                    data: { songId }
                 }
             )
-            return {response}
+            return { response }
         } catch (error) {
-            return {error}
+            return { error }
         }
     }
 }

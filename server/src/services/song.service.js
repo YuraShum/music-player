@@ -68,6 +68,7 @@ class SongService {
     }
 
     async getSongsInformation(request, response) {
+        console.log(request.body)
         try {
             const { songsId } = request.body;
             const userId = request.user.id;
