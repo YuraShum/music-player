@@ -1,8 +1,10 @@
 import { getRandomHexColor } from '@/utils/utils'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CustomButton from './CustomButton'
 import playlistApi from '@/api/requests/playlist.requests'
 import { toast } from 'react-toastify'
+import { useSelector } from 'react-redux'
+import songApi from '@/api/requests/song.requests'
 
 type Props = {
     name: string,
@@ -15,6 +17,33 @@ type Props = {
 //!! додати динамічне оновлення даних після видалення 
 const Playlist = ({ name, description, songs, id }: Props) => {
 
+    const {user} = useSelector(state => state.user)
+
+    const [songsInformation, setSongsInformation] = useState([])
+
+    useEffect(() => {
+        console.log("Songs ", songs)
+        const getSongsInfo = async () => {
+            if (songs.length === 0) return; 
+
+            try {
+                const { response, error } = await songApi.getSongsInformation( songs );
+                if (response) {
+                    setSongsInformation(response);
+                } else if (error) {
+                    toast.error('Не вдалося отримати інформацію про пісні');
+                }
+            } catch (err) {
+                console.error('Помилка при отриманні інформації про пісні:', err);
+                toast.error('Сталася неочікувана помилка.');
+            }
+        };
+
+        getSongsInfo();
+    }, [ user]);
+
+    console.log(songsInformation)
+
     const handleDeletePlayList = async () => {
         const { response, error } = await playlistApi.deletePlaylist({ playlistId: id })
 
@@ -25,9 +54,12 @@ const Playlist = ({ name, description, songs, id }: Props) => {
             toast.error("Неможливо виконати видалення плейлисту")
     }
 
+    
+
     const nameArray = name.split(' ')
     return (
-        <div className=' flex justify-between items-center h-32 bg-gradient-to-t from-gray-200 to-white p-3 rounded-lg'>
+        <div >
+            <div className=' flex justify-between items-center h-32 bg-gradient-to-t from-gray-200 to-white p-3 rounded-lg'>
             <div className='flex gap-6'>
                 {/** logo section */}
                 <p className='flex justify-center items-center h-24 w-24 opacity-40 rounded-xl shadow-xl text-4xl italic text-white font-bold' style={{ backgroundColor: getRandomHexColor() }}>
@@ -42,6 +74,7 @@ const Playlist = ({ name, description, songs, id }: Props) => {
                 </div>
             </div>
             <CustomButton text='Delete' handleClick={handleDeletePlayList} />
+            </div>
         </div>
     )
 }

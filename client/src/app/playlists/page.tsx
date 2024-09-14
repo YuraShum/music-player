@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { CiCirclePlus } from "react-icons/ci";
 import CreateNewPlaylistForm from '@/components/ui/forms/CreateNewPlaylistForm'
+import AllUserPlaylists from '@/components/ui/AllUserPlaylists'
 
 type Props = {}
 
@@ -43,10 +44,10 @@ const page = (props: Props) => {
             <div>
                 <div className='flex gap-5'>
                     <h2 className='text-4xl font-bold'>Playlists</h2>
-                    <button 
-                    onClick={handleToggleCreateNewPlaylist}
-                    className='flex items-center border-2 border-gray-400 px-3 py-2 gap-2 rounded-full hover:translate-y-[-2px] duration-500 hover:text-white hover:bg-hovered'>
-                        <CiCirclePlus className='w-7 h-7'/>
+                    <button
+                        onClick={handleToggleCreateNewPlaylist}
+                        className='flex items-center border-2 border-gray-400 px-3 py-2 gap-2 rounded-full hover:translate-y-[-2px] duration-500 hover:text-white hover:bg-hovered'>
+                        <CiCirclePlus className='w-7 h-7' />
                         <span>Create new Playlist</span>
                     </button>
                 </div>
@@ -55,8 +56,11 @@ const page = (props: Props) => {
                 </div>
             </div>
             {/** create new playlist form */}
-            {createNewPlaylistIsOpen && <CreateNewPlaylistForm/>}
-        
+            {createNewPlaylistIsOpen && <CreateNewPlaylistForm />}
+            {/** display of all created user playlists */}
+            {playlists.length > 0 && <AllUserPlaylists
+                playlists={playlists} />}
+
         </div>
 
     )
