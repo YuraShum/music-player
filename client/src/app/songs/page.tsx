@@ -1,7 +1,7 @@
 'use client'
 import songApi from '@/api/requests/song.requests'
 import MainLayout from '@/components/layout/MainLayout'
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { IoIosSearch } from "react-icons/io";
@@ -10,42 +10,43 @@ import DownLoadSongForm from '@/components/ui/forms/DownLoadSongForm'
 import Song from '@/components/ui/Song'
 import MusicPlaingItem from '@/components/ui/MusicPlaingItem'
 import { randomNonRepeatingIndex } from '@/utils/utils'
+import { SongType } from '@/types/types'
 
 type Props = {}
 
 const Page = (props: Props) => {
     const { user } = useSelector((state: any) => state.user)
 
-    const [songs, setSongs] = useState(null)
-    const [originalSongs, setOriginalSongs] = useState(null)
+    const [songs, setSongs] = useState<SongType[] | null>(null)
+    const [originalSongs, setOriginalSongs] = useState<SongType[] | null>(null)
     const [searchValue, setSearchValue] = useState('')
     const [createFormIsOpen, setCreateFromIsOpen] = useState(false)
 
-    const [currentTrack, setCurrentTrack] = useState<{ mp3: string, cover: string, artist: string, title: string } | null>(null)
+    const [currentTrack, setCurrentTrack] = useState<SongType| null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
 
-    const handleChangeSearchValue = (event) => {
+    const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value.toLowerCase();
         console.log(searchTerm);
 
-        setSongs(originalSongs?.filter(song =>
-            song.title.toLowerCase().includes(searchTerm)
-        ));
-        setSongs(originalSongs?.filter(song =>
+
+        const filteredSongs = originalSongs?.filter(song => 
+            song.title.toLowerCase().includes(searchTerm) ||
             song.artist.toLowerCase().includes(searchTerm)
-        ));
+        )
 
-
+        setSongs(filteredSongs || [])
         setSearchValue(searchTerm);
     };
 
     useEffect(() => {
         const getUserSongs = async () => {
             const { response, error } = await songApi.getUserSongs()
-            console.log(response)
+            console.log("Response songs", response)
             if (response) {
-                setSongs(response)
-                setOriginalSongs(response)
+                const songsData: SongType[] = response as SongType[];
+                setSongs(songsData)
+                setOriginalSongs(songsData)
                 toast.success('Пісні успішно отримані')
             }
             if (error) {
@@ -67,7 +68,7 @@ const Page = (props: Props) => {
 
     const handlePreviousTrack = () => {
         console.log("Prev Track")
-        if (!currentTrack || songs.length === 0) return
+        if (!currentTrack || songs?.length === 0) return
 
         const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
         const previosIndex = (currentIndex - 1 + songs.length) % songs.length;
@@ -84,7 +85,7 @@ const Page = (props: Props) => {
     }
 
     const handleNextRandomTrack = () => {
-        if (!currentTrack || songs.length === 0) return
+        if (!currentTrack || songs?.length === 0) return
         const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
         const newIndex = randomNonRepeatingIndex(currentIndex, songs.length)
         console.log("Next random index", newIndex)

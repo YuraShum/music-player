@@ -1,11 +1,13 @@
 'use client'
 import playlistApi from '@/api/requests/playlist.requests'
-import React, { useEffect, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { CiCirclePlus } from "react-icons/ci";
 import CreateNewPlaylistForm from '@/components/ui/forms/CreateNewPlaylistForm'
 import AllUserPlaylists from '@/components/ui/AllUserPlaylists'
+import { IoIosSearch } from "react-icons/io";
+import { PlaylistType } from '@/types/types'
 
 type Props = {}
 
@@ -13,7 +15,8 @@ const page = (props: Props) => {
 
     const { user } = useSelector((state: any) => state.user)
 
-    const [playlists, setPlaylists] = useState([])
+    const [originalPlaylists, setOriginalPlaylists] = useState<PlaylistType[] | null>(null)
+    const [filteredPlaylists, setFilteredPlaylists] = useState<PlaylistType[] | null>(null)
     const [searchValue, setSearchValue] = useState('')
     const [createNewPlaylistIsOpen, setCreateNewPlaylistIsOpen] = useState(false)
 
@@ -21,7 +24,8 @@ const page = (props: Props) => {
         const getUserPlaylists = async () => {
             const { response, error } = await playlistApi.getUserPlayLists()
             if (response) {
-                setPlaylists(response)
+                setOriginalPlaylists(response)
+                setFilteredPlaylists(response)
                 toast.success('Плейлисти успішно отримані')
 
             }
@@ -38,10 +42,20 @@ const page = (props: Props) => {
         setCreateNewPlaylistIsOpen(prevValue => !prevValue)
     }
 
+    const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
+        const searchItem = event.target.value.toLowerCase()
+
+        const filteredPlaylists = originalPlaylists?.filter(playlist =>
+            playlist.name.toLowerCase().includes(searchItem)
+        )
+        setFilteredPlaylists(filteredPlaylists || [])
+        setSearchValue(searchItem)
+    }
+
     return (
         <div className='p-4 h-[95vh] overflow-auto'>
             {/** section search and create playlist */}
-            <div>
+            <div className='flex justify-between items-center w-full'>
                 <div className='flex gap-5'>
                     <h2 className='text-4xl font-bold'>Playlists</h2>
                     <button
@@ -51,15 +65,20 @@ const page = (props: Props) => {
                         <span>Create new Playlist</span>
                     </button>
                 </div>
-                <div>
-
+                <div className='relative'>
+                    <IoIosSearch className='absolute top-2 left-0 w-8 h-8 text-gray-400' />
+                    <input
+                        placeholder='Search'
+                        className='bg-gray-100 p-3 pl-8 text-sm border-gray-300 border-2 rounded-lg w-full'
+                        value={searchValue} onChange={(event) => handleChangeSearchValue(event)} />
                 </div>
+
             </div>
             {/** create new playlist form */}
             {createNewPlaylistIsOpen && <CreateNewPlaylistForm />}
             {/** display of all created user playlists */}
-            {playlists.length > 0 && <AllUserPlaylists
-                playlists={playlists} />}
+            {filteredPlaylists?.length > 0 && <AllUserPlaylists
+                playlists={filteredPlaylists} />}
 
         </div>
 

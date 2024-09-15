@@ -32,7 +32,6 @@ const songApi = {
         console.log("songsId", songsId);
 
         try {
-            const stringArray = 
             const response = await privateUser.get(
                 songEndpointsConfig.getSongsInfromation,
                 {
