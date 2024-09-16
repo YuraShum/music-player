@@ -1,4 +1,4 @@
-import { UserSignInParams, UserSignUpParams } from "@/interfaces/apiInterfaces"
+import { UpdateUserNameParams, updateUserPasswordParams, UserSignInParams, UserSignUpParams } from "@/interfaces/apiInterfaces"
 import userEndpointsConfig from "../endpoints/user/config"
 import privateUser from "../user/private"
 import publicUser from "../user/public"
@@ -6,27 +6,27 @@ import publicUser from "../user/public"
 
 
 const userApi = {
-    userSignup: async ({username, password, confirmPassword}: UserSignUpParams) => {
+    userSignup: async ({ username, password, confirmPassword }: UserSignUpParams) => {
         try {
             const response = await publicUser.post(
                 userEndpointsConfig.userSignUp,
-                {username, password, confirmPassword}
+                { username, password, confirmPassword }
             )
-    
-            return {response}
+
+            return { response }
         } catch (error) {
-            return {error}
+            return { error }
         }
     },
-    userSignIn: async ({username, password}: UserSignInParams) =>  {
+    userSignIn: async ({ username, password }: UserSignInParams) => {
         try {
             const response = await publicUser.post(
                 userEndpointsConfig.userSignIn,
-                {username, password}
+                { username, password }
             )
-            return {response}
+            return { response }
         } catch (error) {
-            return {error}
+            return { error }
         }
     },
     getUserInformation: async () => {
@@ -34,9 +34,9 @@ const userApi = {
             const response = await privateUser.get(
                 userEndpointsConfig.getUserInformation
             )
-            return {response}
+            return { response }
         } catch (error) {
-            return {error}
+            return { error }
         }
     },
     getUserRating: async () => {
@@ -44,11 +44,37 @@ const userApi = {
             const response = await privateUser.get(
                 userEndpointsConfig.getUserRating
             )
+            return { response }
+        } catch (error) {
+            return { error }
+        }
+    },
+
+    updateUserPassword: async ({ password, newPassword, confirmNewPassword }: updateUserPasswordParams) => {
+        try {
+            const response = await privateUser.put(
+                userEndpointsConfig.updateUserPassword,
+                { password, newPassword, confirmNewPassword }
+            )
+
+            return { response }
+        } catch (error) {
+            return { error }
+        }
+    },
+
+    updateUserName: async ({newUserName}: UpdateUserNameParams) => {
+        try {
+            const response = await privateUser.put(
+                userEndpointsConfig.updateUserName,
+                {newUserName}
+            )
+
             return {response}
         } catch (error) {
             return {error}
         }
-    } 
+    }
 }
 
 export default userApi

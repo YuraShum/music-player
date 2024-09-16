@@ -35,3 +35,13 @@ export interface UserSignUpParams {
 export interface GetSongsInformationParams {
     songsId: string[];
 }
+
+export interface updateUserPasswordParams {
+    password: string,
+    newPassword: string,
+    confirmNewPassword: string
+}
+
+export interface UpdateUserNameParams {
+    newUserNAme: string
+}
