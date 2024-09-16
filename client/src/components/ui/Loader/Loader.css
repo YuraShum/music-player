@@ -1,0 +1,19 @@
+.loader-line {
+    width: 12px;
+    height: 4px;
+    border-radius: 10px;
+    animation: musicLoader 1s ease-in-out infinite;
+}
+
+@keyframes musicLoader {
+    0%{
+        height: 4px;
+    }
+    50%{
+        height: 50px;
+    }
+    100%{
+        height: 4px;
+    }
+
+}

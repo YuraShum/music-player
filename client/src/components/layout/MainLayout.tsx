@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import ModalWindow from '../ui/ModalWindow'
 import userApi from '@/api/requests/user.requests'
 import { setUser } from '@/redux/features/userSlice'
-import { stat } from 'fs'
+import Loader from '../ui/Loader/Loader'
 
 
 type Props = {
@@ -17,16 +17,16 @@ const MainLayout = ({ children }: Props) => {
     const dispatch = useDispatch()
     const { user } = useSelector((state: any) => state.user)
 
-    const {authUser} = useSelector((state: any) => state.authUser)
-    console.log("Auth user",authUser)
+    const { authUser } = useSelector((state: any) => state.authUser)
+    console.log("Auth user", authUser)
     useEffect(() => {
         const getAuthUser = async () => {
-            const {response, error} = await userApi.getUserInformation()
+            const { response, error } = await userApi.getUserInformation()
 
-            if(response){
+            if (response) {
                 dispatch(setUser(response))
             }
-            if(error){
+            if (error) {
                 dispatch(setUser(null))
             }
         }
@@ -39,7 +39,8 @@ const MainLayout = ({ children }: Props) => {
 
     return (
         <>
-            {!user ? <ModalWindow /> :
+            {!user ?
+                authUser ? <ModalWindow /> : <Loader /> :
                 <div>
 
                     <div className="bg-primary min-h-[100vh] w-full flex">

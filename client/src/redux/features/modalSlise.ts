@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    authUres: false
+    authUser: false
 }
 
 
@@ -10,7 +10,7 @@ const modalSlise = createSlice({
     initialState,
     reducers: {
         setAuthUser: (state, action) => {
-            state.authUres = action.payload
+            state.authUser = action.payload
         }
     }
 })
