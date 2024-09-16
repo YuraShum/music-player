@@ -1,9 +1,6 @@
 'use client'
-import MainLayout from "@/components/layout/MainLayout";
-import { store } from "@/redux/app/store";
-import { Provider, useSelector } from "react-redux";
 import 'react-toastify/dist/ReactToastify.css'
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useEffect, useState } from "react";
 import userApi from "@/api/requests/user.requests";
 import Song from "@/components/ui/Song";
@@ -13,7 +10,6 @@ import { randomNonRepeatingIndex } from "@/utils/utils";
 import Statistic from "@/components/ui/Statistic";
 
 export default function Home() {
-  const { user } = useSelector((state: any) => state.user)
 
   const [data, setData] = useState({})
   const [userRating, setUserRating] = useState(null)
