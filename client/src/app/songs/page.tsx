@@ -27,8 +27,6 @@ const Page = (props: Props) => {
 
     const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value.toLowerCase();
-        console.log(searchTerm);
-
 
         const filteredSongs = originalSongs?.filter(song => 
             song.title.toLowerCase().includes(searchTerm) ||
@@ -42,7 +40,6 @@ const Page = (props: Props) => {
     useEffect(() => {
         const getUserSongs = async () => {
             const { response, error } = await songApi.getUserSongs()
-            console.log("Response songs", response)
             if (response) {
                 const songsData: SongType[] = response as SongType[];
                 setSongs(songsData)
@@ -58,8 +55,6 @@ const Page = (props: Props) => {
         getUserSongs()
     }, [user])
 
-    console.log(songs)
-
     const handleToggleDownload = () => {
         setCreateFromIsOpen(prevValue => !prevValue)
     }
@@ -67,12 +62,10 @@ const Page = (props: Props) => {
     const handlePause = () => setIsPlaying(false);
 
     const handlePreviousTrack = () => {
-        console.log("Prev Track")
         if (!currentTrack || songs?.length === 0) return
 
         const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
         const previosIndex = (currentIndex - 1 + songs.length) % songs.length;
-        console.log("previos index", previosIndex)
         setCurrentTrack(songs[previosIndex])
     }
 
@@ -80,7 +73,6 @@ const Page = (props: Props) => {
         if (!currentTrack || songs.length === 0) return
         const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
         const nextIndex = (currentIndex + 1) % songs.length;
-        console.log("Next index", nextIndex)
         setCurrentTrack(songs[nextIndex])
     }
 
@@ -88,7 +80,6 @@ const Page = (props: Props) => {
         if (!currentTrack || songs?.length === 0) return
         const currentIndex = songs.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
         const newIndex = randomNonRepeatingIndex(currentIndex, songs.length)
-        console.log("Next random index", newIndex)
         setCurrentTrack(songs[newIndex])
     }
 

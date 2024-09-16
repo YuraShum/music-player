@@ -29,7 +29,6 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
 
     const [musicIsPlay, setMusicIsPlay] = useState(false)
     const coverSrc = cover ? `${configURL.BASE_URL}/${cover}` : ''
-    console.log(cover)
     const handleDeleteSong = async () => {
         const { response, error } = await songApi.deleteSong({ songId: id });
 

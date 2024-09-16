@@ -22,7 +22,6 @@ const Playlist = ({ name, description, songs, id }: Props) => {
     const [songsInformation, setSongsInformation] = useState([])
 
     useEffect(() => {
-        console.log("Songs ", songs)
         const getSongsInfo = async () => {
             if (songs.length === 0) return; 
 
@@ -42,7 +41,6 @@ const Playlist = ({ name, description, songs, id }: Props) => {
         getSongsInfo();
     }, [ user]);
 
-    console.log(songsInformation)
 
     const handleDeletePlayList = async () => {
         const { response, error } = await playlistApi.deletePlaylist({ playlistId: id })

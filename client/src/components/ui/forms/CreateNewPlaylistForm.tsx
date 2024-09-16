@@ -66,8 +66,6 @@ const CreateNewPlaylistForm = (props: Props) => {
         }
     }
 
-    console.log("userSongs", userSongs)
-
     const handleSongSelected = (event) => {
         if (!selectedSongs.includes(event.target.value)) {
             setSelectedSongs([...selectedSongs, event.target.value])

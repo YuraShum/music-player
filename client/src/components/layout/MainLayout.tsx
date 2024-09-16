@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import ModalWindow from '../ui/ModalWindow'
 import userApi from '@/api/requests/user.requests'
 import { setUser } from '@/redux/features/userSlice'
+import { stat } from 'fs'
 
 
 type Props = {
@@ -16,6 +17,8 @@ const MainLayout = ({ children }: Props) => {
     const dispatch = useDispatch()
     const { user } = useSelector((state: any) => state.user)
 
+    const {authUser} = useSelector((state: any) => state.authUser)
+    console.log("Auth user",authUser)
     useEffect(() => {
         const getAuthUser = async () => {
             const {response, error} = await userApi.getUserInformation()

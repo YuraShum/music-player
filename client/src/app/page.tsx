@@ -49,12 +49,10 @@ export default function Home() {
   const handlePause = () => setIsPlaying(false);
 
   const handlePreviousTrack = () => {
-    console.log("Prev Track")
     if (!currentTrack || data?.songs?.length === 0) return
 
     const currentIndex = data?.songs?.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
     const previosIndex = (currentIndex - 1 + data?.songs?.length) % data?.songs?.length;
-    console.log("previos index", previosIndex)
     setCurrentTrack(data?.songs?.[previosIndex])
   }
 
@@ -62,7 +60,6 @@ export default function Home() {
     if (!currentTrack || data?.songs?.length === 0) return
     const currentIndex = data?.songs?.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
     const nextIndex = (currentIndex + 1) % data?.songs?.length;
-    console.log("Next index", nextIndex)
     setCurrentTrack(data?.songs?.[nextIndex])
   }
 
@@ -70,7 +67,6 @@ export default function Home() {
     if (!currentTrack || data?.songs?.length === 0) return
     const currentIndex = data?.songs?.findIndex(song => song.mp3 === currentTrack.mp3 && song.title === currentTrack.title)
     const newIndex = randomNonRepeatingIndex(currentIndex, data?.songs?.length)
-    console.log("Next random index", newIndex)
     setCurrentTrack(data?.songs?.[newIndex])
   }
 

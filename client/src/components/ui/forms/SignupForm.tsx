@@ -26,7 +26,6 @@ const SignupForm = (props: Props) => {
 
     const submitNewUser: SubmitHandler<NewUserParams> = async (values) => {
         const { response, error } = await userApi.userSignup(values);
-        console.log("create new User", )
         if (response) {
             reset()
             dispatch(setUser(response));
