@@ -89,21 +89,65 @@ class UserService {
     async getUserRanking(request, response) {
         try {
             const users = await userModel.find()
-                .select('username songs') 
+                .select('username songs')
                 .lean();
-    
+
             const sortedUsers = users.sort((a, b) => b.songs.length - a.songs.length);
-    
+
             const userId = request.user.id;
             const userRank = sortedUsers.findIndex(user => user._id.toString() === userId) + 1;
-    
+
             if (userRank === 0) {
                 return responseHendlers.notFound(response, "Користувача не знайдено в рейтингу.");
             }
-    
+
             responseHendlers.ok(response, { rank: userRank, totalUsers: sortedUsers.length });
         } catch (error) {
             return responseHendlers.error(response);
+        }
+    }
+
+    async updateUserName(request, response) {
+        try {
+            const userId = request.user.id;
+            const { newUserName } = request.body
+            const user = await userModel.findById(userId)
+
+            if (!user) {
+                return responseHendlers.unautorize(response)
+            }
+
+            user.username = newUserName
+            await user.save()
+            responseHendlers.ok(response)
+        } catch (error) {
+            return responseHendlers.error(response)
+        }
+    }
+
+    async updateUserPassword(request, response){
+        console.log(request.body.password, request.body.newPassword)
+        try {
+            const userId = request.user.id
+            const {password, newPassword} = request.body
+        
+            const user = await userModel.findById(userId).select('id password salt')
+            console.log(userId)
+
+            if (!user) {
+                return responseHendlers.unautorize(response)
+            }
+            if(!user.validPassword(password)){
+                return responseHendlers.badRequest(response, 'Вказано неправильний пароль користувача.')
+            }
+
+            user.setPassword(newPassword)
+
+            await user.save()
+            responseHendlers.ok(response)
+
+        } catch (error) {
+            return responseHendlers.error(response)
         }
     }
 }

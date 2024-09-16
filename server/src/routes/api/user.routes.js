@@ -65,5 +65,36 @@ router.get(
     userService.getUserRanking.bind(userService)
 )
 
+router.put(
+    '/update-password',
+    tokenMiddleware.authMiddleware,
+    body('password')
+        .exists()
+        .withMessage("Потрібен пароль"),
+    body('newPassword')
+        .exists()
+        .withMessage("Потрібен новий пароль пароль"),
+    body('confirmNewPassword')
+        .exists()
+        .withMessage("Потрібен пароль")
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) throw new Error('confirmNewPassword not match')
+            return true
+        }),
+    validator,
+    userService.updateUserPassword.bind(userService),
+
+)
+
+router.put(
+    '/update-username',
+    tokenMiddleware.authMiddleware,
+    body('newUserName')
+        .exists()
+        .withMessage("Потрібно вказати нове імя користувача"),
+    validator,
+    userService.updateUserName.bind(userService)
+)
+
 export default router
 
