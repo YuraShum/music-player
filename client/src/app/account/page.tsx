@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { FaUserAlt } from "react-icons/fa";
 import UserProfile from '@/components/ui/userProfile';
+import UpdateUserNameForm from '@/components/ui/forms/UpdateUserNameForm';
+import UpdateUserPasswordForm from '@/components/ui/forms/UpdateUserPasswordForm';
+import CustomButton from '@/components/ui/CustomButton';
 
 type Props = {}
 
@@ -14,6 +17,7 @@ const page = (props: Props) => {
 
     const [userInformation, setUserInformation] = useState(null)
     const [userRaiting, setUserRating] = useState(null)
+    const [isUpdateUserNameOpen, setIsUpdateUserNameOpen] = useState<boolean>(true)
 
     useEffect(() => {
         const getUserInfo = async () => {
@@ -47,10 +51,18 @@ const page = (props: Props) => {
             {/** user section */}
             <div className='flex'>
                 {/** user information section */}
-                <UserProfile userInformation={userInformation} userRaiting={userRaiting}/>
+                <UserProfile userInformation={userInformation} userRaiting={userRaiting} />
                 {/** update section */}
                 <div className='max-w-[60%] w-full bg-slate-200'>
-                    dfg
+                    <div className=' flex gap-4 justify-center items-center mt-4'>
+                        <CustomButton text='Update username' handleClick={() => setIsUpdateUserNameOpen(true)}/>
+                        <CustomButton text='Update password' handleClick={() => setIsUpdateUserNameOpen(false)}/>
+                    </div>
+                    <div className='flex justify-center '>
+                    {isUpdateUserNameOpen ?
+                        <UpdateUserNameForm name={userInformation?.username} /> :
+                        <UpdateUserPasswordForm />}
+                    </div>
                 </div>
             </div>
         </div>

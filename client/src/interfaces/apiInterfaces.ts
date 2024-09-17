@@ -43,5 +43,5 @@ export interface updateUserPasswordParams {
 }
 
 export interface UpdateUserNameParams {
-    newUserNAme: string
+    newUserName: string
 }

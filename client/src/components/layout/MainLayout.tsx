@@ -6,6 +6,7 @@ import ModalWindow from '../ui/ModalWindow'
 import userApi from '@/api/requests/user.requests'
 import { setUser } from '@/redux/features/userSlice'
 import Loader from '../ui/Loader/Loader'
+import { setAuthUser } from '@/redux/features/modalSlise'
 
 
 type Props = {
@@ -28,6 +29,7 @@ const MainLayout = ({ children }: Props) => {
             }
             if (error) {
                 dispatch(setUser(null))
+                dispatch(setAuthUser(true))
             }
         }
 
