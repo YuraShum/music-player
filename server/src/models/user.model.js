@@ -30,6 +30,12 @@ const userShema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Playlist'
         }
+    ],
+    favorites: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Favorites'
+        }
     ]
 }, { timestamps: true })
 
