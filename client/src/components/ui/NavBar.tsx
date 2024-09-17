@@ -1,12 +1,26 @@
 import NAV_BAR_CONFIG from '@/const/navbarConfig'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { MdExitToApp } from "react-icons/md";
+import { setUser } from '@/redux/features/userSlice';
+import { setAuthUser } from '@/redux/features/modalSlise';
 
 type Props = {}
 
 const NavBar = (props: Props) => {
 
     const pathname = usePathname()
+    const dispatch = useDispatch()
+    const router = useRouter()
+
+    const { authUser } = useSelector((state: any) => state.authUser)
+
+    const handleSignOutUser =  () => {
+        dispatch(setUser(null))
+        dispatch(setAuthUser(true))
+        router.push('/')
+    }
 
     return (
         <div className='p-6 flex flex-col relative justify-center items-center gap-6 max-h-[100vh]'>
@@ -31,6 +45,12 @@ const NavBar = (props: Props) => {
                     </span>
                 </a>
             ))}
+            {!authUser && 
+            <button 
+            className='border-none'
+            onClick={() => handleSignOutUser()}>
+                <MdExitToApp className='w-[27px] h-[27px] text-white hover:text-gray-300 hover:translate-y-1 hover:shadow-[0_3px_3px_0_rgba(255,255,255,0.4)] duration-300 flex items-center justify-center rounded-b'/>
+                </button>}
         </div>
     )
 }
