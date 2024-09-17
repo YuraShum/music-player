@@ -81,6 +81,24 @@ class FavoriteService {
             responseHendlers.error(response)
         }
     }
+
+    async isSongIsFavorites(request, response) {
+        try {
+            const userId = request.user.id;
+
+            const {songId} = request.body
+
+            const favorite = await favoriteModel.findOne({user: userId})
+
+            if (favorite && favorite.songs.includes(songId)) {
+                return responseHendlers.ok(response, { isFavorite: true });
+            }
+    
+            return responseHendlers.ok(response, { isFavorite: false });
+        } catch (error) {
+            responseHendlers.error(response)
+        }
+    }
 }
 
 export default new FavoriteService()
