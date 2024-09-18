@@ -1,6 +1,7 @@
 
 import { FavoriteParams } from "@/interfaces/apiInterfaces"
 import privateUser from "../user/private"
+import favoriteEndpointsConfig from "../endpoints/favorite/config"
 
 
 const favoriteApi = {

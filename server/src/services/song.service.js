@@ -68,9 +68,9 @@ class SongService {
     }
 
     async getSongsInformation(request, response) {
-        console.log(request.body)
+        console.log(request.query)
         try {
-            const { songsId } = request.body;
+            const {songsId} = request.query
             const userId = request.user.id;
     
             if (!Array.isArray(songsId) || songsId.length === 0) {

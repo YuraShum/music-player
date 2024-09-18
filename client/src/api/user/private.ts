@@ -4,9 +4,7 @@ import configURL from '../../const/config.ts'
 
 const privateUser = axios.create({
     baseURL: configURL.BASE_URL,
-    paramsSerializer: {
-        encode: params => queryString.stringify(params)
-    },
+    paramsSerializer: params => queryString.stringify(params, { arrayFormat: 'bracket' })
 })
 
 privateUser.interceptors.request.use(async function (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {

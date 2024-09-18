@@ -4,3 +4,5 @@ const favoriteEndpointsConfig = {
     getAllUserFavoritesSongs: 'favorite',
     isSongIsFavorites: 'check-favorites'
 }
+
+export default favoriteEndpointsConfig

@@ -1,7 +1,7 @@
 import express from 'express'
 import tokenMidleware from '../../middlewares/auth.middleware.js'
 import upload from '../../middlewares/upload.middleware.js'
-import { body } from 'express-validator'
+import { body, query } from 'express-validator'
 import validator from '../../middlewares/validator.middleware.js'
 import songService from '../../services/song.service.js'
 
@@ -32,9 +32,11 @@ router.get(
 router.get(
     '/songsInformation',
     tokenMidleware.authMiddleware,
-    body('songsId')
+    query('songsId')
         .exists()
-        .withMessage("Необхідний масив ідентифікаторів пісень для отримання інформації"),
+        .withMessage("Необхідний масив ідентифікаторів пісень для отримання інформації")
+        .isArray()
+        .withMessage("songsId має бути масивом"),
     validator,
     songService.getSongsInformation.bind(songService)
 )

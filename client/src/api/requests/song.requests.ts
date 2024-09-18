@@ -28,14 +28,14 @@ const songApi = {
             return { error }
         }
     },
-    getSongsInformation: async ( songsId : GetSongsInformationParams) => {
-        console.log("songsId", songsId);
-
+    getSongsInformation: async (songsId: GetSongsInformationParams) => {
         try {
             const response = await privateUser.get(
                 songEndpointsConfig.getSongsInfromation,
                 {
-                    data: {songsId}
+                    params: { 
+                        songsId
+                    }
                 }
             );
             return { response };
