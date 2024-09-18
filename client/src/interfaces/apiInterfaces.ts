@@ -45,3 +45,7 @@ export interface updateUserPasswordParams {
 export interface UpdateUserNameParams {
     newUserName: string
 }
+
+export interface FavoriteParams {
+    songId: string
+}
