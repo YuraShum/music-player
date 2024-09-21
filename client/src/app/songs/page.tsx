@@ -85,7 +85,7 @@ const Page = (props: Props) => {
 
     return (
         <div className='p-4 h-[95vh] overflow-auto'>
-            {/** section search and download song song */}
+            {/** section search and download song */}
             <div className='flex justify-between items-center'>
                 <div className='flex gap-5'>
                     <h2 className='text-4xl font-bold '>Songs</h2>
