@@ -26,8 +26,6 @@ const DownLoadSongForm = (props: Props) => {
         formData.append('title', values.title);
         formData.append('artist', values.artist);
 
-        // Додаємо файл пісні mp3
-        console.log(values.mp3)
         if (values.mp3 && values?.mp3[0]) {
             formData.append('mp3', values?.mp3);
         } else {
@@ -40,7 +38,6 @@ const DownLoadSongForm = (props: Props) => {
         
 
         try {
-            console.log("Form Data", formData)
             const { response, error } = await songApi.addSong(formData);
 
             if (response) {

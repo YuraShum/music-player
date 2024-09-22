@@ -20,7 +20,6 @@ const Page = (props: Props) => {
             const { response, error } = await favoriteApi.getAllUserFavoritesSongs()
 
             if (response) {
-                console.log('favorite response', response)
                 setFavoriteSongsId(response?.songs || [])
             }
             if (error) {
@@ -31,20 +30,18 @@ const Page = (props: Props) => {
         getFavoriteSongs()
     }, [])
 
-    console.log('favorite songs id', favoriteSongsId)
 
     useEffect(() => {
         const getSongsInformation = async () => {
             if (favoriteSongsId.length === 0) return;
 
-            const { response, error } = await songApi.getSongsInformation(favoriteSongsId)  // Передаємо масив напряму
+            const { response, error } = await songApi.getSongsInformation(favoriteSongsId)
             if (response) {
                 setFavoriteInformation(response)
                 setFilteredFavoriteSongs(response)
-                console.log('Favorite information', response)
             }
             if (error) {
-                console.log(error)
+                (error)
             }
         }
 
@@ -86,7 +83,7 @@ const Page = (props: Props) => {
             {filteredFavoriteSongs?.map((favorite) => (
                 <div
                     key={favorite._id}>
-                    <FavoriteItem favoriteSong= {favorite} onDeleteFronFavorites={onDeleteFronFavorites}/>
+                    <FavoriteItem favoriteSong={favorite} onDeleteFronFavorites={onDeleteFronFavorites} />
                 </div>
             ))}
         </div>

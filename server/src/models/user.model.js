@@ -62,7 +62,6 @@ userShema.methods.validPassword = function (password) {
         "sha512"
     ).toString("hex")
 
-    console.log(password, hash)
     // Порівняння хеша введеного паролю з збереженим хешем
     return this.password === hash
 }

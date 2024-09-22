@@ -10,7 +10,6 @@ export const userSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
-            console.log("Action payload", action.payload)
             if (action.payload === null) {
                 localStorage.removeItem("activationToken")
             } else {

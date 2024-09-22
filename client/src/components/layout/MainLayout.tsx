@@ -19,7 +19,6 @@ const MainLayout = ({ children }: Props) => {
     const { user } = useSelector((state: any) => state.user)
 
     const { authUser } = useSelector((state: any) => state.authUser)
-    console.log("Auth user", authUser)
     useEffect(() => {
         const getAuthUser = async () => {
             const { response, error } = await userApi.getUserInformation()

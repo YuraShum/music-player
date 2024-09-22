@@ -31,7 +31,6 @@ export default function Home() {
         }
 
         if (infoResponse) {
-          console.log(infoResponse)
           setData(infoResponse);
         } else {
           console.log(infoError);

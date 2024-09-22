@@ -9,8 +9,6 @@ class SongService {
         try {
             const { title, artist } = request.body;
             const userId = request.user.id;
-            console.log(request.body)
-            console.log('Request Files:', request.files); 
             let song = await songModel.findOne({ title, artist });
 
             if (song) {
@@ -56,9 +54,7 @@ class SongService {
     }
 
     async getUserSongs(request, response) {
-        console.log('get songs')
         try {
-            console.log("userId", request.user.id)
             const userId = request.user.id
             const songs = await songModel.find({ uploadedBy: userId })
             responseHendlers.ok(response, songs)
@@ -68,7 +64,6 @@ class SongService {
     }
 
     async getSongsInformation(request, response) {
-        console.log(request.query)
         try {
             const {songsId} = request.query
             const userId = request.user.id;
@@ -92,9 +87,7 @@ class SongService {
     async deleteSong(request, response) {
         
         try {
-            console.log("Delete")
             const { songId } = request.body
-            console.log(songId)
             const userId = request.user.id
 
             const song = await songModel.findOne(

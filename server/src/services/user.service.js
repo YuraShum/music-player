@@ -126,13 +126,11 @@ class UserService {
     }
 
     async updateUserPassword(request, response){
-        console.log(request.body.password, request.body.newPassword)
         try {
             const userId = request.user.id
             const {password, newPassword} = request.body
         
             const user = await userModel.findById(userId).select('id password salt')
-            console.log(userId)
 
             if (!user) {
                 return responseHendlers.unautorize(response)

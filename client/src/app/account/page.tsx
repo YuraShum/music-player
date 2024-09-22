@@ -40,7 +40,6 @@ const page = (props: Props) => {
         }
         getUserInfo()
     }, [user])
-    console.log('User account info', userInformation)
 
     return (
         <div className='p-4 h-[95vh] overflow-auto'>

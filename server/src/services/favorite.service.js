@@ -7,14 +7,9 @@ class FavoriteService {
     async addToFavorites(request, response) {
         try {
             const { songId } = request.body;
-            console.log("add to favorite", songId);
-    
             const userId = request.user.id;
-            console.log(userId);
     
             let favorite = await favoriteModel.findOne({ user: userId });
-            console.log("favorite", favorite);
-    
             if (!favorite) {
                 favorite = new favoriteModel({
                     user: userId,
@@ -48,7 +43,6 @@ class FavoriteService {
 
             const favorite = await favoriteModel.findOne({ user: userId })
 
-            console.log("favorite remove", favorite)
             if (favorite) {
                 favorite.songs.pull(songId)
                 await favorite.save()
