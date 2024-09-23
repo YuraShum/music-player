@@ -1,7 +1,17 @@
-export function getRandomHexColor() {
+export function getRandomHexColor(text: string) {
+    let hash = 0;
 
-    const randomColor = Math.floor(Math.random() * 16777215).toString(16);
-    return `#${randomColor.padStart(6, '0')}`;
+    for (let i = 0; i < text.length; i++) {
+        hash = text.charCodeAt(i) + ((hash << 5) - hash);
+    }
+
+    let color = '#';
+    for (let i = 0; i < 3; i++) {
+        const value = (hash >> (i * 8)) & 0xFF;
+        color += ('00' + value.toString(16)).slice(-2);
+    }
+
+    return color;
 }
 
 export function formatTime(time: number): string {
@@ -14,10 +24,10 @@ export function formatTime(time: number): string {
 
 
 export function randomNonRepeatingIndex(currentIndex: number, dataLength: number): number {
-    const newIndex =  Math.floor(Math.random()* dataLength)
-    if(newIndex === currentIndex){
+    const newIndex = Math.floor(Math.random() * dataLength)
+    if (newIndex === currentIndex) {
         return randomNonRepeatingIndex(currentIndex, dataLength)
-    }else{
+    } else {
         return newIndex
     }
 }
