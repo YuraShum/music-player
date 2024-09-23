@@ -6,6 +6,7 @@ import { GetSongsInformationParams } from '@/interfaces/apiInterfaces'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { FaHeart } from "react-icons/fa";
 import { IoIosSearch } from 'react-icons/io'
+import { toast } from 'react-toastify'
 
 type Props = {}
 
@@ -57,8 +58,17 @@ const Page = (props: Props) => {
         })
         setFilteredFavoriteSongs(filteredSongs)
     }
-    const onDeleteFronFavorites = (songId: string): void => {
-        console.log(songId)
+    const onDeleteFronFavorites = async (songId: string) => {
+        const {response, error} = await favoriteApi.removeFromFavorites({songId})
+        console.log(response)
+        if(response){
+            toast.success('Successfully delete your favorite track')
+            setFavoriteSongsId(prevValue => prevValue.filter(id => id !== songId))
+        }
+        if(error){
+            console.log(error)
+            toast.success('Failed to remove from favorites')
+        }
     }
 
     return (

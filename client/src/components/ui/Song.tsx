@@ -1,14 +1,16 @@
 import { getRandomHexColor } from '@/utils/utils';
 import { SiMusicbrainz } from "react-icons/si";
 import { IoPersonSharp } from "react-icons/io5";
-import { GrFavorite } from "react-icons/gr";
 import CustomButton from './CustomButton';
 import songApi from '@/api/requests/song.requests';
 import { toast } from 'react-toastify';
 import { FaPlayCircle } from "react-icons/fa";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaCirclePause } from "react-icons/fa6";
 import configURL from '../../const/config.ts'
+import favoriteApi from '@/api/requests/favorite.requests.ts';
+import { FaHeart } from "react-icons/fa";
+import { button } from 'framer-motion/client';
 
 type Props = {
     artist: string,
@@ -28,7 +30,23 @@ type Props = {
 const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying }: Props) => {
 
     const [musicIsPlay, setMusicIsPlay] = useState(false)
+    const [isFavoriteSong, setIsFavoriteSong] = useState(false)
     const coverSrc = cover ? `${configURL.BASE_URL}/${cover}` : ''
+
+
+    useEffect(() => {
+        const checkIsFavoriteSong = async () => {
+            const { response, error } = await favoriteApi.isSongIsFavorites({ songId: id })
+            if (response) {
+                console.log('Song is Favorite', response)
+                setIsFavoriteSong(response.isFavorite)
+            }
+            if (error) {
+                console.log(error)
+            }
+        }
+        checkIsFavoriteSong()
+    }, [])
     const handleDeleteSong = async () => {
         const { response, error } = await songApi.deleteSong({ songId: id });
 
@@ -47,6 +65,27 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
     const handleMusicISPausing = () => {
         setMusicIsPlay(false)
     }
+
+    const handleAddToFavorite = async () => {
+        const { response, error } = await favoriteApi.addToFavorites({ songId: id })
+        if (response) {
+            setIsFavoriteSong(true)
+        }
+        if (error) {
+            console.log(error)
+        }
+    }
+
+    const handleRemoveFromFavorite = async () => {
+        const { response, error } = await favoriteApi.removeFromFavorites({ songId: id })
+
+        if (response) {
+            setIsFavoriteSong(false)
+        }
+        if (error) {
+            console.log(error)
+        }
+    }
     const isCurrentTrack = currentTrack && currentTrack.mp3 === mp3 && currentTrack.title === title
 
     return (
@@ -55,7 +94,7 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                 <div className='flex items-center gap-8'>
                     <span className='text-xl font-bold text-gray-400'>{9 >= index && 0}{index + 1}</span>
                     {cover ?
-                        <img src={coverSrc} alt='song title'  className='w-16 h-16 bg-gray-200 rounded-xl'/> :
+                        <img src={coverSrc} alt='song title' className='w-16 h-16 bg-gray-200 rounded-xl' /> :
                         <SiMusicbrainz style={{ color: getRandomHexColor() }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
                     }
                     {isCurrentTrack && isPlaying ?
@@ -78,7 +117,14 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
 
                 </div>
                 <div className='flex gap-6 items-center'>
-                    <GrFavorite className='w-6 h-6 cursor-pointer' />
+                    {isFavoriteSong ?
+                        <button onClick={handleRemoveFromFavorite}>
+                            <FaHeart className='w-6 h-6 cursor-pointer text-red-500' />
+                        </button> :
+                        <button onClick={handleAddToFavorite}>
+                            <FaHeart className='w-6 h-6 cursor-pointer' />
+                        </button>
+                    }
                     <CustomButton text='Delete' handleClick={handleDeleteSong}></CustomButton>
                 </div>
             </div>

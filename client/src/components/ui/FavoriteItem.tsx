@@ -14,7 +14,7 @@ type Props = {
     onDeleteFronFavorites: (songId: string) => void
 }
 
-const FavoriteItem = ({ favoriteSong }: Props) => {
+const FavoriteItem = ({ favoriteSong, onDeleteFronFavorites }: Props) => {
 
     const coverSrc = favoriteSong?.cover ? `${configURL.BASE_URL}/${favoriteSong?.cover}` : ''
     return (
