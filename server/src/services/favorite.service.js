@@ -80,7 +80,7 @@ class FavoriteService {
         try {
             const userId = request.user.id;
 
-            const {songId} = request.body
+            const {songId} = request.params
 
             const favorite = await favoriteModel.findOne({user: userId})
 

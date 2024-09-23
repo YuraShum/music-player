@@ -42,11 +42,12 @@ const favoriteApi = {
         }
     },
     isSongIsFavorites: async ({songId}: FavoriteParams) => {
+        console.log('is Favorite API', songId)
         try {
             const response = await privateUser.get(
-                favoriteEndpointsConfig.isSongIsFavorites,
+                favoriteEndpointsConfig.isSongIsFavorites(songId),
                 {
-                    data: {songId}
+                    params: {songId}
                 }
             )
             return {response}

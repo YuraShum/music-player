@@ -34,12 +34,8 @@ router.get(
 )
 
 router.get(
-    '/check-favorites',
+    '/check-favorites/:songId',
     tokenMidleware.authMiddleware,
-    body('songId')
-        .exists()
-        .withMessage("Ідентифікатор пісні обов'язковий."),
-    validator,
     favoriteService.isSongIsFavorites.bind(favoriteService)
 )
 

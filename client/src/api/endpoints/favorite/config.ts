@@ -2,7 +2,7 @@ const favoriteEndpointsConfig = {
     addToFavorites: 'favorite',
     removeFromFavorites: 'favorite',
     getAllUserFavoritesSongs: 'favorite',
-    isSongIsFavorites: 'check-favorites'
+    isSongIsFavorites: (songId:string) => `check-favorites/${songId}`
 }
 
 export default favoriteEndpointsConfig
