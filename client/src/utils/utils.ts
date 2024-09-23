@@ -1,4 +1,4 @@
-export function getRandomHexColor(text: string) {
+export function getHexColorByText(text: string) {
     let hash = 0;
 
     for (let i = 0; i < text.length; i++) {

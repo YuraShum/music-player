@@ -7,7 +7,7 @@ type Props = {
 
 const AllUserPlaylists = ({playlists}: Props) => {
     return (
-        <div>
+        <div className='flex flex-col gap-8 mt-10'>
             {playlists.map(playlist => (
                 <Playlist
                 key={playlist._id}
