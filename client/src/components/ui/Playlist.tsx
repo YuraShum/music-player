@@ -6,7 +6,8 @@ import { toast } from 'react-toastify'
 import { useSelector } from 'react-redux'
 import songApi from '@/api/requests/song.requests'
 import configURL from '@/const/config.ts'
-import { SlOptions } from "react-icons/sl";
+import { MdDelete } from "react-icons/md";
+import AddSongsToPlaylistForm from './forms/AddSongsToPlaylistForm'
 
 type Props = {
     name: string,
@@ -23,6 +24,8 @@ const Playlist = ({ name, description, songs, id }: Props) => {
 
     const [songsInformation, setSongsInformation] = useState([])
     const [allInfoIsOpen, setAllInfoIsOpen] = useState(false)
+    const [userSongs, setUserSongs] = useState([])
+    const [isAddSongToPlaylist, setIsAddSongsToPlaylist] = useState(false)
 
     useEffect(() => {
         const getSongsInfo = async () => {
@@ -41,11 +44,23 @@ const Playlist = ({ name, description, songs, id }: Props) => {
             }
         };
 
+        const getUserSongs = async () => {
+            const { response, error } = await songApi.getUserSongs()
+            if (response) {
+                setUserSongs(response)
+            }
+            if (error) {
+                console.log(error)
+            }
+        }
+
         getSongsInfo();
+        getUserSongs();
     }, [user]);
 
+    console.log(`Playlist songs: ${songsInformation}, UserSongs:${userSongs}`)
 
-    console.log('Song information', songsInformation)
+    const allUserSongsIncluded = userSongs.every(userSong => songsInformation.some(playlistSong => playlistSong._id === userSong._id));
 
     const handleDeletePlayList = async () => {
         const { response, error } = await playlistApi.deletePlaylist({ playlistId: id })
@@ -60,11 +75,26 @@ const Playlist = ({ name, description, songs, id }: Props) => {
     const handleToggleOpenAllInformation = () => {
         setAllInfoIsOpen(prevValue => !prevValue)
     }
+
+    const handleDeleteSongFromPlaylist = async (playlistId: string, songId: string) => {
+        const { response, error } = await playlistApi.deleteSongFromPlaylist({ playlistId, songId })
+        if (response) {
+            toast.success("Successfully removed from playlist")
+        }
+        if (error) {
+            console.log(error)
+        }
+    }
+    console.log(songsInformation)
+    const handleToggleAddSongsToPlaylist = () => {
+        setIsAddSongsToPlaylist(prevValue => !prevValue)
+    }
+
     const nameArray = name.split(' ')
     return (
         <div
             className={`text-white p-3 rounded-lg`}
-            style={{ 
+            style={{
                 background: `linear-gradient( ${getHexColorByText(name)}, #363558)`
             }}>
             <div className=' flex justify-between items-center h-32 '>
@@ -81,57 +111,92 @@ const Playlist = ({ name, description, songs, id }: Props) => {
                         </div>
                     </div>
                 </div>
-                <CustomButton text='Delete' handleClick={handleDeletePlayList} />
+                <button
+                    className='px-3 py-2 border-2 border-gray-300 rounded-full hover:translate-y-[-2px] duration-500 hover:text-white hover:bg-link'
+                    onClick={handleDeletePlayList}>
+                    Delete Playlist
+                </button>
+
             </div>
-            <div className='mb-3 text-lg '>
+            <div className='my-3 text-lg flex gap-4'>
                 {allInfoIsOpen ?
-                    <button onClick={handleToggleOpenAllInformation}>
+                    <button
+                        className='border-2 py-1 px-3 rounded-full hover:translate-y-[-2px] duration-500  hover:bg-link'
+                        onClick={handleToggleOpenAllInformation}>
                         Cloce
                     </button> :
-                    <button onClick={handleToggleOpenAllInformation}>
+                    <button
+                        className='border-2 py-1 px-3 rounded-full hover:translate-y-[-2px] duration-500  hover:bg-link'
+                        onClick={handleToggleOpenAllInformation}>
                         Open detail information</button>}
+                {!allUserSongsIncluded &&
+                    <>
+                        {isAddSongToPlaylist ?
+                            <button
+                                className='border-2 py-1 px-3 rounded-full hover:translate-y-[-2px] duration-500  hover:bg-link'
+                                onClick={handleToggleAddSongsToPlaylist}>
+                                Close form add songs
+                            </button> :
+                            <button
+                                className='border-2 py-1 px-3 rounded-full hover:translate-y-[-2px] duration-500  hover:bg-link'
+                                onClick={handleToggleAddSongsToPlaylist}>
+                                Add songs to playlist
+                            </button>}
+                    </>
+                }
+
             </div>
             {allInfoIsOpen && (
-                <table className="w-full table-auto">
-                    <thead className='border-b-2 '>
-                        <tr >
-                            <th scope="col" className="text-left">#</th>
-                            <th scope="col" className="text-left">Name</th>
-                            <th scope="col" className="text-right">Option</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {songsInformation.map((song, index) => (
-                            <tr key={song._id}>
-                                <td className="text-left">{index + 1}</td>
-                                <td className="text-left">
-                                    {song.cover ? (
-                                        <div className="flex gap-2 items-center">
-                                            <img
-                                                src={`${configURL.BASE_URL}/${song.cover}`}
-                                                alt="song title"
-                                                className="w-14 h-14 bg-gray-200 rounded-xl"
-                                            />
+                songsInformation.length > 0 ?
+                    <table className="w-full table-auto">
+                        <thead className='border-b-2 '>
+                            <tr >
+                                <th scope="col" className="text-left">#</th>
+                                <th scope="col" className="text-left">Name</th>
+                                <th scope="col" className="text-right">Option</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {songsInformation.map((song, index) => (
+                                <tr key={song._id} className='hover:bg-gray-400 duration-200 hover:bg-opacity-20'>
+                                    <td className="text-left p-2">{index + 1}</td>
+                                    <td className="text-left p-2">
+                                        {song.cover ? (
+                                            <div className="flex gap-2 items-center">
+                                                <img
+                                                    src={`${configURL.BASE_URL}/${song.cover}`}
+                                                    alt="song title"
+                                                    className="w-14 h-14 bg-gray-200 rounded-xl"
+                                                />
+                                                <div>
+                                                    <h3 className="text-xl font-bold">{song.title}</h3>
+                                                    <p className="text-sm">{song.artist}</p>
+                                                </div>
+                                            </div>
+                                        ) : (
                                             <div>
                                                 <h3 className="text-xl font-bold">{song.title}</h3>
                                                 <p className="text-sm">{song.artist}</p>
                                             </div>
-                                        </div>
-                                    ) : (
-                                        <div>
-                                            <h3 className="text-xl font-bold">{song.title}</h3>
-                                            <p className="text-sm">{song.artist}</p>
-                                        </div>
-                                    )}
-                                </td>
-                                <td className="flex justify-end mr-4">
-                                    <SlOptions />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                    <tfoot></tfoot>
-                </table>
+                                        )}
+                                    </td>
+                                    <td className="flex justify-end mr-4 p-2 ">
+                                        <button
+                                            className=''
+                                            onClick={() => handleDeleteSongFromPlaylist(id, song._id)}>
+                                            <MdDelete className='w-6 h-6' />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table> :
+                    <p className='m-auto my-6 p-4 border-2 border-gray-300 rounded-full w-fit text-lg'>There are no songs in the playlist: <span className='font-bold italic underline'>{name}</span></p>
+            )}
+            {/** add songs to playlist section */}
+
+            {!allUserSongsIncluded && isAddSongToPlaylist && (
+                <AddSongsToPlaylistForm playlistId={id} includedSongs={songsInformation} />
             )}
         </div>
     )
