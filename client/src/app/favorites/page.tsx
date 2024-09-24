@@ -49,23 +49,26 @@ const Page = (props: Props) => {
         getSongsInformation()
     }, [favoriteSongsId])
 
+    console.log(favoriteInformation)
+
     const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
+        setSearchValue(event.target.value)
         const currentValue = event.target.value.toLowerCase()
 
-        const filteredSongs = favoriteInformation?.filter(favorite => {
+        const filteredSongs = favoriteInformation?.filter(favorite =>
             favorite.artist.toLowerCase().includes(currentValue) ||
-                favorite.title.toLowerCase().includes(currentValue)
-        })
+            favorite.title.toLowerCase().includes(currentValue)
+        )
         setFilteredFavoriteSongs(filteredSongs)
     }
     const onDeleteFronFavorites = async (songId: string) => {
-        const {response, error} = await favoriteApi.removeFromFavorites({songId})
+        const { response, error } = await favoriteApi.removeFromFavorites({ songId })
         console.log(response)
-        if(response){
+        if (response) {
             toast.success('Successfully delete your favorite track')
             setFavoriteSongsId(prevValue => prevValue.filter(id => id !== songId))
         }
-        if(error){
+        if (error) {
             console.log(error)
             toast.success('Failed to remove from favorites')
         }
@@ -87,7 +90,8 @@ const Page = (props: Props) => {
                     <input
                         placeholder='Search'
                         className='bg-gray-100 p-3 pl-8 text-sm border-gray-300 border-2 rounded-lg w-full'
-                        value={searchValue} onChange={(event) => handleChangeSearchValue(event)} />
+                        value={searchValue}
+                        onChange={handleChangeSearchValue} />
                 </div>
             </div>
             {filteredFavoriteSongs?.map((favorite) => (
