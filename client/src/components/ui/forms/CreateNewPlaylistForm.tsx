@@ -11,13 +11,21 @@ interface CreatePlaylistParams {
     description: string,
     songs: string[]
 }
-type Props = {}
+type Props = {
+    onPlaylistCreated: () =>void
+}
 
-const CreateNewPlaylistForm = (props: Props) => {
+const CreateNewPlaylistForm = ({onPlaylistCreated}: Props) => {
     const { user } = useSelector((state: any) => state.user)
 
     const [userSongs, setUserSongs] = useState([])
     const [selectedSongs, setSelectedSongs] = useState<string[]>([])
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<CreatePlaylistParams>();
 
     const selectRef = useRef<HTMLSelectElement>(null)
 
@@ -27,16 +35,8 @@ const CreateNewPlaylistForm = (props: Props) => {
         }
     }, [selectedSongs]);
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm<CreatePlaylistParams>();
-
-
+    
     useEffect(() => {
-
         const getUserSongs = async () => {
             const { response, error } = await songApi.getUserSongs()
 
@@ -62,6 +62,7 @@ const CreateNewPlaylistForm = (props: Props) => {
                 toast.success('Успішно створено новий плейлист')
                 setSelectedSongs([])
                 reset()
+                onPlaylistCreated()
             }
             if (error) {
                 console.log(error)

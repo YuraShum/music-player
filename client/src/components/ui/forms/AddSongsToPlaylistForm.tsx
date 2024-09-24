@@ -12,10 +12,13 @@ interface SongsParams {
     songsInformation: never[]
 }
 type Props = {
-    playlistId: string
+    playlistId: string,
+    includedSongs: any[],
+    handlePlaylist: (selectedSongs: string[]) => void,
+    closeForm: (value: boolean) => void
 }
 
-const AddSongsToPlaylistForm = ({ playlistId, includedSongs }: Props) => {
+const AddSongsToPlaylistForm = ({ playlistId, includedSongs, handlePlaylist, closeForm }: Props) => {
 
     const [userSongs, setUserSongs] = useState([])
     const [selectedSongs, setSelectedSongs] = useState<string[]>([])
@@ -59,7 +62,10 @@ const AddSongsToPlaylistForm = ({ playlistId, includedSongs }: Props) => {
 
         if (response) {
             reset()
+            handlePlaylist(selectedSongs)
+            closeForm(false)
             toast.success("Songs have been successfully added to the playlist")
+            
         }
         if (error) {
             console.log(error)
