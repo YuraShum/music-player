@@ -123,7 +123,7 @@ const Playlist = ({ name, description, songs, id }: Props) => {
                     <button
                         className='border-2 py-1 px-3 rounded-full hover:translate-y-[-2px] duration-500  hover:bg-link'
                         onClick={handleToggleOpenAllInformation}>
-                        Cloce
+                        Close
                     </button> :
                     <button
                         className='border-2 py-1 px-3 rounded-full hover:translate-y-[-2px] duration-500  hover:bg-link'

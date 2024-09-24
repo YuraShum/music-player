@@ -1,6 +1,6 @@
 import playlistApi from '@/api/requests/playlist.requests'
 import songApi from '@/api/requests/song.requests'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { RxCrossCircled } from 'react-icons/rx'
 import { SiNbc } from 'react-icons/si'
@@ -20,13 +20,18 @@ const AddSongsToPlaylistForm = ({ playlistId, includedSongs }: Props) => {
     const [userSongs, setUserSongs] = useState([])
     const [selectedSongs, setSelectedSongs] = useState<string[]>([])
     const { user } = useSelector((state: any) => state.user)
+    const selectMusicRef = useRef<HTMLSelectElement>(null)
 
     const {
         reset,
-        register,
         handleSubmit,
-        formState: { errors }
     } = useForm<SongsParams>()
+
+    useEffect(() => {
+        if (selectedSongs.length === 0 && selectMusicRef.current) {
+            selectMusicRef.current.value = ''
+        }
+    }, [selectedSongs])
 
     useEffect(() => {
 
@@ -83,8 +88,11 @@ const AddSongsToPlaylistForm = ({ playlistId, includedSongs }: Props) => {
                     Add songs that should be included in the playlist
                 </label>
                 <select
+                ref={selectMusicRef}
+                    defaultValue=''
                     className='bg-transparent p-3 text-sm w-full border-2 border-gray-300 rounded-lg'
                     onChange={handleSongSelected}>
+                    <option value='' disabled>Choose a song</option>
                     {userSongs
                         .filter((song) => !includedSongs.some((includedSong) => includedSong._id === song._id))
                         .map((song, index) => (

@@ -1,4 +1,4 @@
-import { getRandomHexColor } from '@/utils/utils';
+import { getHexColorByText } from '@/utils/utils';
 import { SiMusicbrainz } from "react-icons/si";
 import { IoPersonSharp } from "react-icons/io5";
 import CustomButton from './CustomButton';
@@ -10,7 +10,6 @@ import { FaCirclePause } from "react-icons/fa6";
 import configURL from '../../const/config.ts'
 import favoriteApi from '@/api/requests/favorite.requests.ts';
 import { FaHeart } from "react-icons/fa";
-import { button } from 'framer-motion/client';
 
 type Props = {
     artist: string,
@@ -95,7 +94,7 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                     <span className='text-xl font-bold text-gray-400'>{9 >= index && 0}{index + 1}</span>
                     {cover ?
                         <img src={coverSrc} alt='song title' className='w-16 h-16 bg-gray-200 rounded-xl' /> :
-                        <SiMusicbrainz style={{ color: getRandomHexColor() }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
+                        <SiMusicbrainz style={{ color: getHexColorByText(title) }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
                     }
                     {isCurrentTrack && isPlaying ?
                         <FaCirclePause

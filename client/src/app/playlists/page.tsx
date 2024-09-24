@@ -60,9 +60,14 @@ const page = (props: Props) => {
                     <h2 className='text-4xl font-bold'>Playlists</h2>
                     <button
                         onClick={handleToggleCreateNewPlaylist}
-                        className='flex items-center border-2 border-gray-400 px-3 py-2 gap-2 rounded-full hover:translate-y-[-2px] duration-500 hover:text-white hover:bg-hovered'>
-                        <CiCirclePlus className='w-7 h-7' />
-                        <span>Create new Playlist</span>
+                        className={`flex items-center border-2 border-gray-400 px-3 py-2 gap-2 rounded-full hover:translate-y-[-2px] duration-500 hover:text-white hover:bg-hovered ${createNewPlaylistIsOpen && 'bg-primary text-white'}`}>
+                        {createNewPlaylistIsOpen ?
+                            <p>Close</p>
+                            :
+                            <>
+                                <CiCirclePlus className='w-7 h-7' />
+                                <span>Create new Playlist</span>
+                            </>}
                     </button>
                 </div>
                 <div className='relative'>
