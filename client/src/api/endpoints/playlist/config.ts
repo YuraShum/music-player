@@ -1,9 +1,9 @@
 const playlistEndpointsConfig = {
     createPlayList: 'collections/playlist',
     getUserPlayLists: 'collections/playlists',
-    addSongToPlaylist: 'collections//playlist/song',
+    addSongsToPlaylist: 'collections/playlist/songs',
     deletePlaylist: 'collections/playlist',
-    deleteSongFromPlaylist: 'collections//playlist/song',
+    deleteSongFromPlaylist: 'collections/playlist/song',
 }
 
 export default playlistEndpointsConfig

@@ -42,27 +42,30 @@ class PlaylistService {
 
     async addSongToPlaylist(request, response) {
         try {
-            const { playlistId, songId } = request.body
-            const userId = request.user.id
-
-            const playlist = await playlistModel.findOne({ _id: playlistId, createdBy: userId })
+            const { playlistId, songIds } = request.body;
+            const userId = request.user.id;
+            const playlist = await playlistModel.findOne({ _id: playlistId, createdBy: userId });
 
             if (!playlist) {
-                responseHendlers.notFound(response, 'Плейлист не знайдено.')
+                return responseHendlers.notFound(response, 'Плейлист не знайдено.');
+            }
+            const songsToAdd = Array.isArray(songIds) ? songIds : [songIds];
+
+            const foundSongs = await songModel.find({
+                _id: { $in: songsToAdd },
+                uploadedBy: userId
+            });
+
+            if (foundSongs.length !== songsToAdd.length) {
+                return responseHendlers.notFound(response, 'Деякі з пісень не знайдено або вони не завантажені вами.');
+            }
+            const newSongs = songsToAdd.filter(songId => !playlist.songs.includes(songId));
+            if (newSongs.length === 0) {
+                return responseHendlers.badRequest(response, 'Усі пісні вже додані до плейлиста.');
             }
 
-            const song = await songModel.findOne({ _id: songId, uploadedBy: userId })
-
-            if (!song) {
-                responseHendlers.notFound(response, 'Пісню не знайдено.')
-            }
-
-            if (playlist.songs.includes(songId)) {
-                return responseHendlers.badRequest(response, 'Ця пісня вже є в плейлисті.');
-            }
-
-            playlist.songs.push(songId)
-            await playlist.save()
+            playlist.songs.push(...newSongs);
+            await playlist.save();
 
             responseHendlers.ok(response, playlist)
         } catch (error) {

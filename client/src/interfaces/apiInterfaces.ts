@@ -49,3 +49,8 @@ export interface UpdateUserNameParams {
 export interface FavoriteParams {
     songId: string
 }
+
+export interface AddSongsToPlaylistParams{
+    playlistId: string,
+    songIds: string[]
+}

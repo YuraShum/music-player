@@ -28,12 +28,12 @@ router.get(
 )
 
 router.post(
-    '/playlist/song',
+    '/playlist/songs',
     tokenMidleware.authMiddleware,
     body('playlistId')
         .exists()
         .withMessage("Необхідний ідентифікатор плейлисту."),
-    body('songId')
+    body('songIds')
         .exists()
         .withMessage("Необхідний ідентифікатор пісні."),
     validator,

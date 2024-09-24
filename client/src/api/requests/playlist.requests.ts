@@ -1,4 +1,4 @@
-import { CreatePlaylistParams, DeletePlaylistParams, PlaylistSongActionParams } from "@/interfaces/apiInterfaces"
+import { AddSongsToPlaylistParams, CreatePlaylistParams, DeletePlaylistParams, PlaylistSongActionParams } from "@/interfaces/apiInterfaces"
 import playlistEndpointsConfig from "../endpoints/playlist/config"
 import privateUser from "../user/private"
 
@@ -26,11 +26,11 @@ const playlistApi = {
             return { error }
         }
     },
-    addSongToPlaylist: async ({ playlistId, songId }: PlaylistSongActionParams) => {
+    addSongsToPlaylist: async ({ playlistId, songIds }: AddSongsToPlaylistParams) => {
         try {
             const response = await privateUser.post(
-                playlistEndpointsConfig.addSongToPlaylist,
-                { playlistId, songId }
+                playlistEndpointsConfig.addSongsToPlaylist,
+                { playlistId, songIds }
             )
             return { response }
         } catch (error) {
