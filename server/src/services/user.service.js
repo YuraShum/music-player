@@ -35,7 +35,7 @@ class UserService {
                     id: user.id
                 })
         } catch {
-            responseHendlers.error(response)
+            return responseHendlers.error(response)
         }
     }
 
@@ -46,17 +46,23 @@ class UserService {
             const user = await userModel.findOne({ username })
                 .select('username id password salt songs playlists')
 
-            if (!user) responseHendlers.badRequest(response, `Користувача із вказаним ім'ям ${username} неіснує`)
+            console.log(user)
+
+            if (!user) {
+                return responseHendlers.badRequest(response, `Користувача із вказаним ім'ям ${username} неіснує`)
+            }
 
 
-            if (!user.validPassword(password)) responseHendlers.badRequest(response, `Вказано неправильний пароль користувача`)
+            if (!user.validPassword(password)) {
+                return responseHendlers.badRequest(response, `Вказано неправильний пароль користувача`)
+            }
 
 
             const genToken = generateToken(user.id)
             user.password = undefined
             user.salt = undefined
 
-            responseHendlers.created(
+            return responseHendlers.created(
                 response,
                 {
                     genToken,
@@ -66,7 +72,7 @@ class UserService {
             )
 
         } catch {
-            responseHendlers.error(response)
+            return responseHendlers.error(response)
         }
     }
 
@@ -125,17 +131,17 @@ class UserService {
         }
     }
 
-    async updateUserPassword(request, response){
+    async updateUserPassword(request, response) {
         try {
             const userId = request.user.id
-            const {password, newPassword} = request.body
-        
+            const { password, newPassword } = request.body
+
             const user = await userModel.findById(userId).select('id password salt')
 
             if (!user) {
                 return responseHendlers.unautorize(response)
             }
-            if(!user.validPassword(password)){
+            if (!user.validPassword(password)) {
                 return responseHendlers.badRequest(response, 'Вказано неправильний пароль користувача.')
             }
 
