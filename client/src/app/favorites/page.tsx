@@ -2,7 +2,7 @@
 import favoriteApi from '@/api/requests/favorite.requests'
 import songApi from '@/api/requests/song.requests'
 import FavoriteItem from '@/components/ui/FavoriteItem'
-import { GetSongsInformationParams } from '@/interfaces/apiInterfaces'
+import { SongType } from '@/types/types'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { FaHeart } from "react-icons/fa";
 import { IoIosSearch } from 'react-icons/io'
@@ -11,66 +11,72 @@ import { toast } from 'react-toastify'
 type Props = {}
 
 const Page = (props: Props) => {
+    
     const [favoriteSongsId, setFavoriteSongsId] = useState<string[]>([])
-    const [favoriteInformation, setFavoriteInformation] = useState<GetSongsInformationParams | any[]>([])
-    const [searchValue, setSearchValue] = useState('')
-    const [filteredFavoriteSongs, setFilteredFavoriteSongs] = useState(null)
+    const [favoriteInformation, setFavoriteInformation] = useState<SongType[]>([])
+    const [searchValue, setSearchValue] = useState<string>('')
+    const [filteredFavoriteSongs, setFilteredFavoriteSongs] = useState<SongType[]>([])
 
-    useEffect(() => {
-        const getFavoriteSongs = async () => {
-            const { response, error } = await favoriteApi.getAllUserFavoritesSongs()
+    const getFavoriteSongs = async () => {
+        try {
+            const result = await favoriteApi.getAllUserFavoritesSongs();
 
-            if (response) {
-                setFavoriteSongsId(response?.songs || [])
+            if ('response' in result) {
+                console.log("favorite songs", result.response);
+                setFavoriteSongsId(result.response || []);
+            } else if ('error' in result) {
+                console.log(result.error);
             }
-            if (error) {
-                console.log(error)
-            }
+        } catch (err) {
+            console.error('Помилка при отриманні улюблених пісень:', err);
         }
-
+    }
+    useEffect(() => {
         getFavoriteSongs()
     }, [])
-
 
     useEffect(() => {
         const getSongsInformation = async () => {
             if (favoriteSongsId.length === 0) return;
-
-            const { response, error } = await songApi.getSongsInformation(favoriteSongsId)
-            if (response) {
-                setFavoriteInformation(response)
-                setFilteredFavoriteSongs(response)
-            }
-            if (error) {
-                (error)
+            try {
+                const result = await songApi.getSongsInformation(favoriteSongsId)
+                if ('response' in result) {
+                    setFavoriteInformation(result.response)
+                    setFilteredFavoriteSongs(result.response)
+                }
+                else if ('error' in result) {
+                    console.log(result.error)
+                }
+            } catch (err) {
+                console.log(err)
             }
         }
-
         getSongsInformation()
     }, [favoriteSongsId])
-
-    console.log(favoriteInformation)
 
     const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
         setSearchValue(event.target.value)
         const currentValue = event.target.value.toLowerCase()
 
-        const filteredSongs = favoriteInformation?.filter(favorite =>
+        const filteredSongs = favoriteInformation.filter(favorite =>
             favorite.artist.toLowerCase().includes(currentValue) ||
             favorite.title.toLowerCase().includes(currentValue)
         )
         setFilteredFavoriteSongs(filteredSongs)
     }
-    const onDeleteFronFavorites = async (songId: string) => {
+
+    const onDeleteFromFavorites = async (songId: string) => {
         const { response, error } = await favoriteApi.removeFromFavorites({ songId })
         console.log(response)
         if (response) {
             toast.success('Successfully delete your favorite track')
+            getFavoriteSongs()
             setFavoriteSongsId(prevValue => prevValue.filter(id => id !== songId))
+            setFilteredFavoriteSongs(prevValue => prevValue.filter(song => song._id !== songId))
         }
         if (error) {
             console.log(error)
-            toast.success('Failed to remove from favorites')
+            toast.error('Failed to remove from favorites')
         }
     }
 
@@ -94,10 +100,10 @@ const Page = (props: Props) => {
                         onChange={handleChangeSearchValue} />
                 </div>
             </div>
-            {filteredFavoriteSongs?.map((favorite) => (
+            {filteredFavoriteSongs.map((favorite) => (
                 <div
                     key={favorite._id}>
-                    <FavoriteItem favoriteSong={favorite} onDeleteFronFavorites={onDeleteFronFavorites} />
+                    <FavoriteItem favoriteSong={favorite} onDeleteFromFavorites={onDeleteFromFavorites} />
                 </div>
             ))}
         </div>

@@ -31,12 +31,14 @@ const favoriteApi = {
             return { error }
         }
     },
-    getAllUserFavoritesSongs: async () => {
+    getAllUserFavoritesSongs: async (): Promise<{ response: string[] } | { error: any }> => {
         try {
             const response = await privateUser.get(
                 favoriteEndpointsConfig.getAllUserFavoritesSongs
             )
-            return { response }
+
+            const songsId: string[] = response.songs;
+            return { response: songsId };
         } catch (error) {
             return { error }
         }
