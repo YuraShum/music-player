@@ -1,6 +1,8 @@
 import responseHendlers from "../handlers/response.js";
 import songModel from "../models/song.model.js";
 import userModel from "../models/user.model.js";
+import favoriteModel from '../models/favorite.model.js'
+import playlistModel from '../models/playlist.model.js'
 
 
 class SongService {
@@ -65,18 +67,18 @@ class SongService {
 
     async getSongsInformation(request, response) {
         try {
-            const {songsId} = request.query
+            const { songsId } = request.query
             const userId = request.user.id;
-    
+
             if (!Array.isArray(songsId) || songsId.length === 0) {
                 return responseHendlers.badRequest(response, 'Некоректний масив ідентифікаторів пісень.');
             }
-    
+
             const songs = await songModel.find({
                 _id: { $in: songsId },
                 uploadedBy: userId
             });
-    
+
             responseHendlers.ok(response, songs);
         } catch (error) {
             console.error(error);
@@ -85,32 +87,42 @@ class SongService {
     }
 
     async deleteSong(request, response) {
-        
         try {
-            const { songId } = request.body
-            const userId = request.user.id
 
-            const song = await songModel.findOne(
-                {
-                    _id: songId,
-                    uploadedBy: userId
-                }
-            )
+            const { songId } = request.body;
+            const userId = request.user.id;
+
+            const song = await songModel.findOne({
+                _id: songId,
+                uploadedBy: userId
+            });
+            console.log(song)
+
             if (!song) {
-                return responseHendlers.notFound(response, "Пісня не знайдена або не належить користувачу.")
-
+                return responseHendlers.notFound(response, "Пісня не знайдена або не належить користувачу.");
             }
 
+
+            await favoriteModel.updateMany(
+                { user: userId, songs: songId },
+                { $pull: { songs: songId } }
+            );
+
+
+            await playlistModel.updateMany(
+                { createdBy: userId, songs: songId },
+                { $pull: { songs: songId } }
+            );
+
             if (song.uploadedBy.length === 1) {
-                await song.deleteOne()
+                await song.deleteOne();
 
                 await userModel.updateOne(
                     { _id: userId },
                     { $pull: { songs: songId } }
                 );
-                responseHendlers.ok(response, { message: 'Пісня успішно видалена.' })
-            }
-            else {
+                responseHendlers.ok(response, { message: 'Пісня успішно видалена.' });
+            } else {
                 await songModel.updateOne(
                     { _id: songId },
                     { $pull: { uploadedBy: userId } }
@@ -122,7 +134,7 @@ class SongService {
                 responseHendlers.ok(response, { message: 'Користувач успішно видалений з пісні.' });
             }
         } catch (error) {
-            responseHendlers.error(response)
+            responseHendlers.error(response);
         }
     }
 }
