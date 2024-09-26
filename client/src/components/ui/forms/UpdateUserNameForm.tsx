@@ -8,37 +8,31 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { useDispatch } from 'react-redux'
 
 type Props = {
-    name: string
+    name: string | undefined
 }
 
 
 const UpdateUserNameForm = ({ name }: Props) => {
 
     const dispatch = useDispatch()
-
     const router = useRouter()
-
-    const {
-        register,
-        reset,
-        formState: { errors },
-        handleSubmit
-    } = useForm<UpdateUserNameParams>()
+    const { register, reset, formState: { errors }, handleSubmit } = useForm<UpdateUserNameParams>()
 
     const submitNewUserName: SubmitHandler<UpdateUserNameParams> = async (values) => {
-
-        const { response, error } = await userApi.updateUserName(values)
-        if (response) {
-            reset()
-            dispatch(setUser(null))
-            dispatch(setAuthUser(true))
-            router.push('/')
-            
+        try {
+            const { response, error } = await userApi.updateUserName(values)
+            if (response) {
+                reset()
+                dispatch(setUser(null))
+                dispatch(setAuthUser(true))
+                router.push('/')
+            }
+            if (error) {
+                console.log(error)
+            }
+        } catch (err) {
+            console.log(err)
         }
-        if (error) {
-            console.log(error)
-        }
-
     }
 
     return (
@@ -72,7 +66,7 @@ const UpdateUserNameForm = ({ name }: Props) => {
             </div>
             <div className='flex justify-between items-center'>
                 <button
-                className='border-2 text-white bg-link hover:bg-orange-400 border-gray-300 p-2 rounded-lg font-bold transition hover:translate-y-[-2px] duration-500'
+                    className='border-2 text-white bg-link hover:bg-orange-400 border-gray-300 p-2 rounded-lg font-bold transition hover:translate-y-[-2px] duration-500'
                     onClick={() => reset()}>
                     Cancel
                 </button>

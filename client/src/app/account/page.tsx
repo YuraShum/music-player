@@ -1,45 +1,46 @@
 'use client'
 import userApi from '@/api/requests/user.requests'
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { FaUserAlt } from "react-icons/fa";
 import UserProfile from '@/components/ui/userProfile';
 import UpdateUserNameForm from '@/components/ui/forms/UpdateUserNameForm';
 import UpdateUserPasswordForm from '@/components/ui/forms/UpdateUserPasswordForm';
 import CustomButton from '@/components/ui/CustomButton';
+import { UserInformation, UserRaiting } from '@/interfaces/apiInterfaces';
 
 type Props = {}
 
 const page = (props: Props) => {
 
-
-    const { user } = useSelector((state: any) => state.user)
-
-    const [userInformation, setUserInformation] = useState(null)
-    const [userRaiting, setUserRating] = useState(null)
+    const [userInformation, setUserInformation] = useState<UserInformation| null>(null);
+    const [userRaiting, setUserRating] = useState<UserRaiting| null>(null);
     const [isUpdateUserNameOpen, setIsUpdateUserNameOpen] = useState<boolean>(true)
 
     useEffect(() => {
         const getUserInfo = async () => {
-            const [{ response: ratingResponse, error: ratingError }, { response: infoResponse, error: infoError }] = await Promise.all([
-                userApi.getUserRating(),
-                userApi.getUserInformation(),
-            ]);
+            try {
+                const [resultRating, resultInfo] = await Promise.all([
+                    userApi.getUserRating(),
+                    userApi.getUserInformation(),
+                ]);
 
-            if (ratingResponse) {
-                setUserRating(ratingResponse);
-            } else {
-                console.log(ratingError);
+                if ('response' in resultRating) {
+                    setUserRating(resultRating.response);
+                } else if ('error' in resultRating) {
+                    console.log(resultRating.error);
+                }
+
+                if ('response' in resultInfo) {
+                    setUserInformation(resultInfo.response);
+                } else if ('error' in resultInfo) {
+                    console.log(resultInfo.error);
+                }
+            } catch (err) {
+                console.error('Помилка при отриманні інформації про користувача:', err);
             }
-            if (infoResponse) {
-                setUserInformation(infoResponse)
-            }
-            if (infoError) {
-                console.log(infoError)
-            }
-        }
-        getUserInfo()
-    }, [user])
+        };
+
+        getUserInfo();
+    }, []);
 
     return (
         <div className='p-4 h-[95vh] overflow-auto'>
@@ -54,13 +55,13 @@ const page = (props: Props) => {
                 {/** update section */}
                 <div className='max-w-[60%] w-full bg-slate-200'>
                     <div className=' flex gap-4 justify-center items-center mt-4'>
-                        <CustomButton text='Update username' handleClick={() => setIsUpdateUserNameOpen(true)}/>
-                        <CustomButton text='Update password' handleClick={() => setIsUpdateUserNameOpen(false)}/>
+                        <CustomButton text='Update username' handleClick={() => setIsUpdateUserNameOpen(true)} />
+                        <CustomButton text='Update password' handleClick={() => setIsUpdateUserNameOpen(false)} />
                     </div>
                     <div className='flex justify-center '>
-                    {isUpdateUserNameOpen ?
-                        <UpdateUserNameForm name={userInformation?.username} /> :
-                        <UpdateUserPasswordForm />}
+                        {isUpdateUserNameOpen ?
+                            <UpdateUserNameForm name={userInformation?.username} /> :
+                            <UpdateUserPasswordForm />}
                     </div>
                 </div>
             </div>

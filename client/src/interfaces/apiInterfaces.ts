@@ -1,3 +1,5 @@
+import { PlaylistType, SongType } from "@/types/types"
+
 export interface SongParams {
     title: string,
     artist: string
@@ -53,4 +55,15 @@ export interface FavoriteParams {
 export interface AddSongsToPlaylistParams{
     playlistId: string,
     songIds: string[]
+}
+
+export interface UserRaiting{
+    rank: number,
+    totalUsers: number
+} 
+
+export interface UserInformation{
+    playlists: PlaylistType[],
+    songs: SongType[],
+    username: string
 }

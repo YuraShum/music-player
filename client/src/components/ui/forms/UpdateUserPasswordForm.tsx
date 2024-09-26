@@ -12,27 +12,23 @@ type Props = {}
 const UpdateUserPasswordForm = (props: Props) => {
 
     const dispatch = useDispatch()
-
     const router = useRouter()
-
-    const { reset,
-        register,
-        handleSubmit,
-        formState: { errors }
-    } = useForm<updateUserPasswordParams>()
+    const { reset, register, handleSubmit, formState: { errors } } = useForm<updateUserPasswordParams>()
 
     const submiteNewPassword: SubmitHandler<updateUserPasswordParams> = async (values) => {
-        const { response, error } = await userApi.updateUserPassword(values)
-
-        if (response) {
-            reset()
-            dispatch(setUser(null))
-            dispatch(setAuthUser(true))
-            router.push('/')
-
-        }
-        if (error) {
-            console.log(error)
+        try {
+            const { response, error } = await userApi.updateUserPassword(values)
+            if (response) {
+                reset()
+                dispatch(setUser(null))
+                dispatch(setAuthUser(true))
+                router.push('/')
+            }
+            if (error) {
+                console.log(error)
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
 

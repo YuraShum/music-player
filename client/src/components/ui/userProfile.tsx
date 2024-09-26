@@ -1,6 +1,11 @@
+import { UserInformation, UserRaiting } from '@/interfaces/apiInterfaces';
 import { FaUserAlt } from 'react-icons/fa';
 
-const UserProfile = ({ userInformation, userRaiting }) => {
+type Props ={
+    userInformation: UserInformation | null,
+    userRaiting: UserRaiting | null
+}
+const UserProfile = ({ userInformation, userRaiting }: Props) => {
     return (
         <div className='relative max-w-[40%] w-full border-2 border-gray-200 flex flex-col justify-between'>
             <div className='absolute inset-x-0 top-[-80px] flex justify-center items-center'>
