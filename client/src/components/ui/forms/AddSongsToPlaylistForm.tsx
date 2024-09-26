@@ -1,10 +1,8 @@
 import playlistApi from '@/api/requests/playlist.requests'
-import songApi from '@/api/requests/song.requests'
-import React, { useEffect, useRef, useState } from 'react'
+import { GetSongsInformationParams } from '@/interfaces/apiInterfaces'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { RxCrossCircled } from 'react-icons/rx'
-import { SiNbc } from 'react-icons/si'
-import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 
 interface SongsParams {
@@ -15,20 +13,15 @@ type Props = {
     playlistId: string,
     includedSongs: any[],
     handlePlaylist: (selectedSongs: string[]) => void,
-    closeForm: (value: boolean) => void
+    closeForm: (value: boolean) => void,
+    userSongs: any[]
 }
 
-const AddSongsToPlaylistForm = ({ playlistId, includedSongs, handlePlaylist, closeForm }: Props) => {
+const AddSongsToPlaylistForm = ({ playlistId, includedSongs, handlePlaylist, closeForm, userSongs }: Props) => {
 
-    const [userSongs, setUserSongs] = useState([])
     const [selectedSongs, setSelectedSongs] = useState<string[]>([])
-    const { user } = useSelector((state: any) => state.user)
     const selectMusicRef = useRef<HTMLSelectElement>(null)
-
-    const {
-        reset,
-        handleSubmit,
-    } = useForm<SongsParams>()
+    const { reset, handleSubmit } = useForm<SongsParams>()
 
     useEffect(() => {
         if (selectedSongs.length === 0 && selectMusicRef.current) {
@@ -36,54 +29,34 @@ const AddSongsToPlaylistForm = ({ playlistId, includedSongs, handlePlaylist, clo
         }
     }, [selectedSongs])
 
-    useEffect(() => {
-
-        const getUserSongs = async () => {
-            const { response, error } = await songApi.getUserSongs()
-
-            if (response) {
-                setUserSongs(response)
-                toast.success('Пісні успішно отримані')
-            }
-            if (error) {
-                toast.error(
-                    'Неможливо отримати пісні'
-                )
-            }
-        }
-
-        getUserSongs()
-    }, [user])
-
-
-    const submitSongsToPlaylist: SubmitHandler<SongsParams> = async () => {
-        console.log("selected songId", selectedSongs)
-        const { response, error } = await playlistApi.addSongsToPlaylist({ playlistId, songIds: selectedSongs })
-
-        if (response) {
-            reset()
-            handlePlaylist(selectedSongs)
-            closeForm(false)
-            toast.success("Songs have been successfully added to the playlist")
-            
-        }
-        if (error) {
-            console.log(error)
-        }
-    }
     const handleRemoveFromSelected = (songId: string) => {
-        setSelectedSongs(selectedSongs.filter(id => id !== songId))
+        setSelectedSongs(selectedSongs.filter((id: string) => id !== songId))
     }
 
-    const handleSongSelected = (event) => {
+    const handleSongSelected = (event: ChangeEvent<HTMLSelectElement>) => {
         if (!selectedSongs.includes(event.target.value)) {
             setSelectedSongs([...selectedSongs, event.target.value])
         } else {
             toast.warning('Ця пісня вже додана в плейлист.');
         }
     }
-    console.log(selectedSongs)
 
+    const submitSongsToPlaylist: SubmitHandler<SongsParams> = async () => {
+        try {
+            const { response, error } = await playlistApi.addSongsToPlaylist({ playlistId, songIds: selectedSongs })
+            if (response) {
+                reset()
+                handlePlaylist(selectedSongs)
+                closeForm(false)
+                toast.success("Songs have been successfully added to the playlist")
+            }
+            if (error) {
+                console.log(error)
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     return (
         <form
@@ -94,14 +67,14 @@ const AddSongsToPlaylistForm = ({ playlistId, includedSongs, handlePlaylist, clo
                     Add songs that should be included in the playlist
                 </label>
                 <select
-                ref={selectMusicRef}
+                    ref={selectMusicRef}
                     defaultValue=''
                     className='bg-transparent p-3 text-sm w-full border-2 border-gray-300 rounded-lg'
                     onChange={handleSongSelected}>
                     <option value='' disabled>Choose a song</option>
                     {userSongs
                         .filter((song) => !includedSongs.some((includedSong) => includedSong._id === song._id))
-                        .map((song, index) => (
+                        .map((song) => (
                             <option
                                 key={song._id}
                                 value={song?._id}

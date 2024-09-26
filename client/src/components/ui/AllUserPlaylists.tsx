@@ -7,15 +7,15 @@ type Props = {
 
 }
 
-const AllUserPlaylists = ({playlists, handlePlaylist}: Props) => {
+const AllUserPlaylists = ({ playlists, handlePlaylist }: Props) => {
     return (
         <div className='flex flex-col gap-8 mt-10'>
             {playlists.map(playlist => (
                 <Playlist
-                handlePlaylist={handlePlaylist}
-                key={playlist._id}
+                    handlePlaylist={handlePlaylist}
+                    key={playlist._id}
                     name={playlist.name}
-                    songs={playlist.songs}
+                    songsId={playlist.songs}
                     description={playlist.description}
                     id={playlist._id}
                 />

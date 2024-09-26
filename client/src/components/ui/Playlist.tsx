@@ -1,41 +1,39 @@
 import { getHexColorByText } from '@/utils/utils'
 import React, { useEffect, useState } from 'react'
-import CustomButton from './CustomButton'
 import playlistApi from '@/api/requests/playlist.requests'
 import { toast } from 'react-toastify'
-import { useSelector } from 'react-redux'
 import songApi from '@/api/requests/song.requests'
 import configURL from '@/const/config.ts'
 import { MdDelete } from "react-icons/md";
 import AddSongsToPlaylistForm from './forms/AddSongsToPlaylistForm'
+import { SongType } from '@/types/types'
 
 type Props = {
     name: string,
     description: string,
-    songs: string[],
+    songsId: string[],
     id: string,
     handlePlaylist: () => void
 }
 
+const Playlist = ({ name, description, songsId, id, handlePlaylist }: Props) => {
 
-const Playlist = ({ name, description, songs, id, handlePlaylist }: Props) => {
-
-    const [songsInformation, setSongsInformation] = useState([])
+    const [songsInformation, setSongsInformation] = useState<SongType[]>([])
     const [allInfoIsOpen, setAllInfoIsOpen] = useState(false)
-    const [userSongs, setUserSongs] = useState([])
+    const [userSongs, setUserSongs] = useState<SongType[]>([])
     const [isAddSongToPlaylist, setIsAddSongsToPlaylist] = useState(false)
-
     const nameArray = name.split(' ')
     const allUserSongsIncluded = userSongs.every(userSong => songsInformation.some(playlistSong => playlistSong._id === userSong._id));
 
     const getSongsInfo = async () => {
-        if (songs.length === 0) return;
+        if (Array.isArray(songsId) && songsId.length === 0) return;
 
         try {
-            const { response, error } = await songApi.getSongsInformation(songs);
-            if (response) {
-                setSongsInformation(response);
-            } else if (error) {
+            const result = await songApi.getSongsInformation(songsId);
+            if ('response' in result) {
+                setSongsInformation(result.response);
+            }
+            else if ('error' in result) {
                 toast.error('Не вдалося отримати інформацію про пісні');
             }
         } catch (err) {
@@ -45,12 +43,17 @@ const Playlist = ({ name, description, songs, id, handlePlaylist }: Props) => {
     };
 
     const getUserSongs = async () => {
-        const { response, error } = await songApi.getUserSongs()
-        if (response) {
-            setUserSongs(response)
-        }
-        if (error) {
-            console.log(error)
+        try {
+            const result = await songApi.getUserSongs()
+            if ('response' in result) {
+                setUserSongs(result.response)
+            }
+            else if ('error' in result) {
+                console.log(result.error)
+            }
+        } catch (err) {
+            console.error('Помилка при отриманні інформації про пісні користувача:', err);
+            toast.error('Сталася неочікувана помилка.');
         }
     }
 
@@ -59,18 +62,19 @@ const Playlist = ({ name, description, songs, id, handlePlaylist }: Props) => {
         getUserSongs();
     }, []);
 
-
-
     const handleDeletePlayList = async () => {
-
-        const { response, error } = await playlistApi.deletePlaylist({ playlistId: id })
-        if (response) {
-            handlePlaylist()
-            toast.success('Плейлист успішно видалено')
-
+        try {
+            const { response, error } = await playlistApi.deletePlaylist({ playlistId: id })
+            if (response) {
+                handlePlaylist()
+                toast.success('Плейлист успішно видалено')
+            }
+            if (error)
+                toast.error("Неможливо виконати видалення плейлисту")
         }
-        if (error)
-            toast.error("Неможливо виконати видалення плейлисту")
+        catch (err) {
+            console.log(err)
+        }
     }
 
     const handleToggleOpenAllInformation = () => {
@@ -78,31 +82,39 @@ const Playlist = ({ name, description, songs, id, handlePlaylist }: Props) => {
     }
 
     const handleDeleteSongFromPlaylist = async (playlistId: string, songId: string) => {
-        const { response, error } = await playlistApi.deleteSongFromPlaylist({ playlistId, songId })
-        if (response) {
-            handlePlaylist()
-            setSongsInformation(prevSongs => prevSongs.filter(song => song._id !== songId));
-            toast.success("Successfully removed from playlist")
-
-        }
-        if (error) {
-            console.log(error)
+        try {
+            const { response, error } = await playlistApi.deleteSongFromPlaylist({ playlistId, songId })
+            if (response) {
+                handlePlaylist()
+                setSongsInformation(prevSongs => prevSongs.filter((song: SongType) => song._id !== songId));
+                toast.success("Successfully removed from playlist")
+            }
+            if (error) {
+                console.log(error)
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
 
     const handleUpdatePlaylistSongs = (selectedSongs: string[]) => {
         const fetchNewSongsInfo = async () => {
-            const { response, error } = await songApi.getSongsInformation(selectedSongs);
-            if (response) {
-                setSongsInformation(prevSongs => [...prevSongs, ...response]);
-                handlePlaylist()
-            } else if (error) {
-                toast.error('Не вдалося отримати інформацію про нові пісні');
+            try {
+                const result = await songApi.getSongsInformation(selectedSongs);
+                if ('response' in result) {
+                    setSongsInformation((prevSongs: SongType[]) => [...prevSongs, ...result.response]);
+                    handlePlaylist();
+                } else if ('error' in result) {
+                    toast.error('Не вдалося отримати інформацію про нові пісні');
+                }
+            } catch (err) {
+                console.error('Помилка при отриманні нових пісень:', err);
+                toast.error('Сталася неочікувана помилка.');
             }
         };
-
         fetchNewSongsInfo();
-    }
+    };
+
     const handleToggleAddSongsToPlaylist = () => {
         setIsAddSongsToPlaylist(prevValue => !prevValue)
     }
@@ -123,7 +135,7 @@ const Playlist = ({ name, description, songs, id, handlePlaylist }: Props) => {
                         <h2 className='text-2xl font-bold mb-4'>{name}</h2>
                         <div className='text-sm'>
                             <p>{description}</p>
-                            <span>Number of songs: {songs.length}</span>
+                            <span>Number of songs: {Array.isArray(songsId) && songsId.length}</span>
                         </div>
                     </div>
                 </div>
@@ -173,7 +185,7 @@ const Playlist = ({ name, description, songs, id, handlePlaylist }: Props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {songsInformation.map((song, index) => (
+                            {songsInformation.map((song: SongType, index: number) => (
                                 <tr key={song._id} className='hover:bg-gray-400 duration-200 hover:bg-opacity-20'>
                                     <td className="text-left p-2">{index + 1}</td>
                                     <td className="text-left p-2">
@@ -213,6 +225,7 @@ const Playlist = ({ name, description, songs, id, handlePlaylist }: Props) => {
 
             {!allUserSongsIncluded && isAddSongToPlaylist && (
                 <AddSongsToPlaylistForm
+                    userSongs={userSongs}
                     playlistId={id}
                     includedSongs={songsInformation}
                     handlePlaylist={handleUpdatePlaylistSongs}

@@ -1,8 +1,6 @@
 import playlistApi from '@/api/requests/playlist.requests';
-import songApi from '@/api/requests/song.requests';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { RxCrossCircled } from "react-icons/rx";
 
@@ -12,22 +10,17 @@ interface CreatePlaylistParams {
     songs: string[]
 }
 type Props = {
-    onPlaylistCreated: () =>void
+    onPlaylistCreated: () => void,
+    userSongs: any[],
+    openForm: (value: boolean) => void
 }
 
-const CreateNewPlaylistForm = ({onPlaylistCreated}: Props) => {
-    const { user } = useSelector((state: any) => state.user)
+const CreateNewPlaylistForm = ({ onPlaylistCreated, userSongs, openForm }: Props) => {
 
-    const [userSongs, setUserSongs] = useState([])
     const [selectedSongs, setSelectedSongs] = useState<string[]>([])
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm<CreatePlaylistParams>();
-
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<CreatePlaylistParams>();
     const selectRef = useRef<HTMLSelectElement>(null)
+
 
     useEffect(() => {
         if (selectedSongs.length === 0 && selectRef.current) {
@@ -35,24 +28,17 @@ const CreateNewPlaylistForm = ({onPlaylistCreated}: Props) => {
         }
     }, [selectedSongs]);
 
-    
-    useEffect(() => {
-        const getUserSongs = async () => {
-            const { response, error } = await songApi.getUserSongs()
-
-            if (response) {
-                setUserSongs(response)
-                toast.success('Пісні успішно отримані')
-            }
-            if (error) {
-                toast.error(
-                    'Неможливо отримати пісні'
-                )
-            }
+    const handleSongSelected = (event: ChangeEvent<HTMLSelectElement>) => {
+        if (!selectedSongs.includes(event.target.value)) {
+            setSelectedSongs([...selectedSongs, event.target.value])
+        } else {
+            toast.warning('Ця пісня вже додана в плейлист.');
         }
+    }
 
-        getUserSongs()
-    }, [user])
+    const handleRemoveFromSelected = (songId: string) => {
+        setSelectedSongs(selectedSongs.filter(id => id !== songId))
+    }
 
     const submitNewPlaylist: SubmitHandler<CreatePlaylistParams> = async ({ name, description }) => {
         try {
@@ -62,6 +48,7 @@ const CreateNewPlaylistForm = ({onPlaylistCreated}: Props) => {
                 toast.success('Успішно створено новий плейлист')
                 setSelectedSongs([])
                 reset()
+                openForm(false)
                 onPlaylistCreated()
             }
             if (error) {
@@ -73,18 +60,6 @@ const CreateNewPlaylistForm = ({onPlaylistCreated}: Props) => {
             toast.error('Сталася неочікувана помилка.');
         }
     }
-
-    const handleSongSelected = (event) => {
-        if (!selectedSongs.includes(event.target.value)) {
-            setSelectedSongs([...selectedSongs, event.target.value])
-        } else {
-            toast.warning('Ця пісня вже додана в плейлист.');
-        }
-    }
-    const handleRemoveFromSelected = (songId: string) => {
-        setSelectedSongs(selectedSongs.filter(id => id !== songId))
-    }
-
 
     return (
         <form
@@ -124,8 +99,7 @@ const CreateNewPlaylistForm = ({onPlaylistCreated}: Props) => {
                     {userSongs.map((song) => (
                         <option
                             key={song?._id}
-                            value={song?._id}
-                        >
+                            value={song?._id}>
                             {song?.title} - {song?.artist}
                         </option>
                     ))}

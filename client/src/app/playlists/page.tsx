@@ -1,37 +1,56 @@
 'use client'
 import playlistApi from '@/api/requests/playlist.requests'
 import React, { ChangeEvent, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { CiCirclePlus } from "react-icons/ci";
 import CreateNewPlaylistForm from '@/components/ui/forms/CreateNewPlaylistForm'
 import AllUserPlaylists from '@/components/ui/AllUserPlaylists'
 import { IoIosSearch } from "react-icons/io";
-import { PlaylistType } from '@/types/types'
+import { PlaylistType, SongType } from '@/types/types'
+import songApi from '@/api/requests/song.requests'
 
 type Props = {}
 
 const page = (props: Props) => {
 
-    const [originalPlaylists, setOriginalPlaylists] = useState<PlaylistType[] | null>(null)
-    const [filteredPlaylists, setFilteredPlaylists] = useState<PlaylistType[] | null>(null)
-    const [searchValue, setSearchValue] = useState('')
-    const [createNewPlaylistIsOpen, setCreateNewPlaylistIsOpen] = useState(false)
+    const [originalPlaylists, setOriginalPlaylists] = useState<PlaylistType[]>([])
+    const [filteredPlaylists, setFilteredPlaylists] = useState<PlaylistType[]>([])
+    const [searchValue, setSearchValue] = useState<string>('')
+    const [createNewPlaylistIsOpen, setCreateNewPlaylistIsOpen] = useState<boolean>(false)
+    const [userSongs, setUserSongs] = useState<SongType[]>([])
 
     const getUserPlaylists = async () => {
-        const { response, error } = await playlistApi.getUserPlayLists()
-        if (response) {
-            setOriginalPlaylists(response)
-            setFilteredPlaylists(response)
-            toast.success('Плейлисти успішно отримані')
-
-        }
-        if (error) {
-            toast.error('Не вдалося отримати плейлисти')
+        try {
+            const result = await playlistApi.getUserPlayLists()
+            if ('response' in result) {
+                setOriginalPlaylists(result.response)
+                setFilteredPlaylists(result.response)
+            }
+            if ('error' in result) {
+                toast.error('Не вдалося отримати плейлисти')
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
+
+    const getUserSongs = async () => {
+        try {
+            const result = await songApi.getUserSongs()
+            if ('response' in result) {
+                setUserSongs(result.response)
+            }
+            if ('error' in result) {
+                toast.error('Неможливо отримати пісні')
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
     useEffect(() => {
         getUserPlaylists()
+        getUserSongs()
     }, [])
 
     const handleToggleCreateNewPlaylist = () => {
@@ -40,13 +59,12 @@ const page = (props: Props) => {
 
     const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
         const searchItem = event.target.value.toLowerCase()
-
         const filteredPlaylists = originalPlaylists?.filter(playlist =>
-            playlist.name.toLowerCase().includes(searchItem)
-        )
+            playlist.name.toLowerCase().includes(searchItem))
         setFilteredPlaylists(filteredPlaylists || [])
         setSearchValue(searchItem)
     }
+
     const handlePlaylist = () => {
         getUserPlaylists()
     }
@@ -76,16 +94,13 @@ const page = (props: Props) => {
                         className='bg-gray-100 p-3 pl-8 text-sm border-gray-300 border-2 rounded-lg w-full'
                         value={searchValue} onChange={(event) => handleChangeSearchValue(event)} />
                 </div>
-
             </div>
             {/** create new playlist form */}
-            {createNewPlaylistIsOpen && <CreateNewPlaylistForm onPlaylistCreated={handlePlaylist}/>}
+            {createNewPlaylistIsOpen && <CreateNewPlaylistForm onPlaylistCreated={handlePlaylist} userSongs={userSongs} openForm={setCreateNewPlaylistIsOpen} />}
             {/** display of all created user playlists */}
-            {filteredPlaylists?.length > 0 && <AllUserPlaylists
-                playlists={filteredPlaylists} handlePlaylist = {handlePlaylist}/>}
-
+            {filteredPlaylists.length > 0 && <AllUserPlaylists
+                playlists={filteredPlaylists} handlePlaylist={handlePlaylist} />}
         </div>
-
     )
 }
 
