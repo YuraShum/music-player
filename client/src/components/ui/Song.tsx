@@ -1,7 +1,6 @@
 import { getHexColorByText } from '@/utils/utils';
 import { SiMusicbrainz } from "react-icons/si";
 import { IoPersonSharp } from "react-icons/io5";
-import CustomButton from './CustomButton';
 import songApi from '@/api/requests/song.requests';
 import { toast } from 'react-toastify';
 import { FaPlayCircle } from "react-icons/fa";
@@ -10,6 +9,7 @@ import { FaCirclePause } from "react-icons/fa6";
 import configURL from '../../const/config.ts'
 import favoriteApi from '@/api/requests/favorite.requests.ts';
 import { FaHeart } from "react-icons/fa";
+import { MdDelete } from "react-icons/md";
 
 type Props = {
     artist: string,
@@ -21,14 +21,13 @@ type Props = {
     onPlay: () => void,
     currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
     isPlaying: boolean,
+    deletedSong: () => void,
 
 }
 
-//!! баг не можна зупиняти та відтвворювати пісні в списку пісень (почергово можна перебирати, а
-//!! зупиняти та відновлювати один і той самий трек неможливо)
-const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying }: Props) => {
 
-    const [musicIsPlay, setMusicIsPlay] = useState<boolean>(false)
+const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying, deletedSong}: Props) => {
+
     const [isFavoriteSong, setIsFavoriteSong] = useState<boolean>(false)
     const coverSrc = cover ? `${configURL.BASE_URL}/${cover}` : ''
     const isCurrentTrack = currentTrack && currentTrack.mp3 === mp3 && currentTrack.title === title
@@ -55,8 +54,8 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
     const handleDeleteSong = async () => {
         try {
             const { response, error } = await songApi.deleteSong({ songId: id });
-
             if (response) {
+                deletedSong()
                 toast.success('Пісню успішно видалено');
             }
             if (error) {
@@ -98,12 +97,9 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
 
     const handleMusicIsPlaying = () => {
         onPlay()
-        setMusicIsPlay(true)
+        
     }
 
-    const handleMusicISPausing = () => {
-        setMusicIsPlay(false)
-    }
 
     return (
         <div>
@@ -117,7 +113,7 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                     {isCurrentTrack && isPlaying ?
                         <FaCirclePause
                             className='w-8 h-8 cursor-pointer text-primary'
-                            onClick={handleMusicISPausing}
+                            
                         />
                         :
                         <FaPlayCircle
@@ -142,7 +138,10 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                             <FaHeart className='w-6 h-6 cursor-pointer' />
                         </button>
                     }
-                    <CustomButton text='Delete' handleClick={handleDeleteSong}></CustomButton>
+                    <button
+                        onClick={handleDeleteSong}>
+                        <MdDelete className='w-7 h-7 text-primary' />
+                    </button>
                 </div>
             </div>
         </div>

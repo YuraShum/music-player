@@ -3,7 +3,10 @@ import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
-type Props = {};
+type Props = {
+    onCretedNewSong: () => void,
+    setCreateFromIsOpen: (value: boolean) => void
+};
 
 interface DownloadSongsParams {
     title: string;
@@ -12,7 +15,7 @@ interface DownloadSongsParams {
     cover?: FileList;
 }
 
-const DownLoadSongForm = (props: Props) => {
+const DownLoadSongForm = ({onCretedNewSong, setCreateFromIsOpen}: Props) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<DownloadSongsParams>();
 
     const submitDownloadedSong: SubmitHandler<DownloadSongsParams> = async (values: DownloadSongsParams) => {
@@ -37,6 +40,9 @@ const DownLoadSongForm = (props: Props) => {
             if (response) {
                 toast.success('Пісня завантажена успішно.');
                 reset();
+                setCreateFromIsOpen(false)
+                onCretedNewSong()
+                
             }
             if (error) {
                 console.log(error);

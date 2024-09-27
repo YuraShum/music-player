@@ -18,13 +18,12 @@ const Page = (props: Props) => {
     const [originalSongs, setOriginalSongs] = useState<SongType[] | null>(null)
     const [searchValue, setSearchValue] = useState<string>('')
     const [createFormIsOpen, setCreateFromIsOpen] = useState<boolean>(false)
-    const [currentTrack, setCurrentTrack] = useState<SongType| null>(null)
+    const [currentTrack, setCurrentTrack] = useState<SongType | null>(null)
     const [isPlaying, setIsPlaying] = useState(false)
 
-    useEffect(() => {
-        const getUserSongs = async () => {
-            try {
-                const result = await songApi.getUserSongs()
+    const getUserSongs = async () => {
+        try {
+            const result = await songApi.getUserSongs()
             if ('response' in result) {
                 const songsData: SongType[] = result.response;
                 setSongs(songsData)
@@ -36,16 +35,18 @@ const Page = (props: Props) => {
                     'Неможливо отримати пісні'
                 )
             }
-            } catch (err) {
-                console.log(err)
-            }
+        } catch (err) {
+            console.log(err)
         }
+    }
+
+    useEffect(() => {
         getUserSongs()
     }, [])
 
     const handleChangeSearchValue = (event: ChangeEvent<HTMLInputElement>) => {
         const searchTerm = event.target.value.toLowerCase();
-        const filteredSongs = originalSongs?.filter(song => 
+        const filteredSongs = originalSongs?.filter(song =>
             song.title.toLowerCase().includes(searchTerm) ||
             song.artist.toLowerCase().includes(searchTerm)
         )
@@ -58,8 +59,12 @@ const Page = (props: Props) => {
     }
 
     const handlePlay = () => setIsPlaying(true);
-    
+
     const handlePause = () => setIsPlaying(false);
+
+    const handleToggleSong = () => {
+        getUserSongs()
+    }
 
     const handlePreviousTrack = () => {
         if (!currentTrack || songs.length === 0) return
@@ -105,7 +110,10 @@ const Page = (props: Props) => {
                 </div>
             </div>
             {/** download song section */}
-            {createFormIsOpen && <DownLoadSongForm />}
+            {createFormIsOpen &&
+                <DownLoadSongForm
+                    onCretedNewSong={handleToggleSong}
+                    setCreateFromIsOpen={setCreateFromIsOpen} />}
             {/** Downloaded songs section */}
             <div className='mt-16'>
                 <h2 className="text-2xl font-bold">Downloaded songs</h2>
@@ -122,18 +130,19 @@ const Page = (props: Props) => {
                             onPlay={() => setCurrentTrack(song)}
                             currentTrack={currentTrack}
                             isPlaying={isPlaying}
+                            deletedSong={handleToggleSong}
                         />
                     ))}
                 </div>
             </div>
-            <MusicPlaingItem
+            {songs && <MusicPlaingItem
                 currentTrack={currentTrack}
                 isPlaying={isPlaying}
                 onPlay={handlePlay}
                 onPause={handlePause}
                 nextTrack={handleNextTrack}
-                previousTrack={handlePreviousTrack} 
-                nextRandomTrack={handleNextRandomTrack}/>
+                previousTrack={handlePreviousTrack}
+                nextRandomTrack={handleNextRandomTrack} />}
         </div>
     )
 }
