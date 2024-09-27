@@ -1,16 +1,13 @@
+import { UserRaiting } from '@/interfaces/apiInterfaces'
 import React from 'react'
 
 type Props = {
     songsLength: number,
-    userRang: {
-        rank: number,
-        totalUsers: number
-    },
+    userRang: UserRaiting | null,
     playlistLength: number
-
 }
 
-const Statistic = ({songsLength, userRang, playlistLength}: Props) => {
+const Statistic = ({ songsLength, userRang, playlistLength }: Props) => {
     return (
         <>
             <h1 className="text-center text-4xl mt-3">Statistic</h1>
@@ -28,7 +25,6 @@ const Statistic = ({songsLength, userRang, playlistLength}: Props) => {
                         </div>
                     </div>
                 </div>
-
                 <div className="p-[4px] relative scale-125">
                     <div className="absolute inset-0 bg-gradient-to-r from-yellow-300 to-yellow-600 rounded-lg" />
                     <div className="bg-transparent rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
@@ -46,7 +42,6 @@ const Statistic = ({songsLength, userRang, playlistLength}: Props) => {
                         </div>
                     </div>
                 </div>
-
                 <div className="p-[4px] relative">
                     <div className="absolute inset-0 bg-gradient-to-r from-cyan-300 to-cyan-600 rounded-lg" />
                     <div className="bg-transparent rounded-[6px] relative group transition duration-200 text-white hover:bg-transparent">
