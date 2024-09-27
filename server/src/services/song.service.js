@@ -13,6 +13,10 @@ class SongService {
             const userId = request.user.id;
             let song = await songModel.findOne({ title, artist });
 
+            if (!request.files || !request.files.mp3) {
+                return responseHendlers.badRequest(response, 'Необхідно завантажити файл пісні mp3.');
+            }
+
             if (song) {
 
                 if (!song.uploadedBy.includes(userId)) {

@@ -21,28 +21,27 @@ const DownLoadSongForm = (props: Props) => {
     } = useForm<DownloadSongsParams>();
 
     const submitDownloadedSong: SubmitHandler<DownloadSongsParams> = async (values) => {
-        // Створення FormData для передачі даних форми з файлами
         const formData = new FormData();
         formData.append('title', values.title);
         formData.append('artist', values.artist);
-
-        if (values.mp3 && values?.mp3[0]) {
-            formData.append('mp3', values?.mp3);
+    
+        const musicFile = values.mp3[0]; 
+        if (musicFile) {
+            formData.append('mp3', musicFile);
         } else {
             toast.error('Необхідно завантажити файл пісні mp3');
             return;
         }
-        if (values.cover && values?.cover[0]) {
-            formData.append('cover', values?.cover[0]);
+        if (values.cover) {
+            formData.append('cover', values.cover[0]); 
         }
-        
-
+    
         try {
             const { response, error } = await songApi.addSong(formData);
-
+    
             if (response) {
                 toast.success('Пісня завантажена успішно.');
-                reset(); 
+                reset();
             }
             if (error) {
                 console.log(error);
@@ -53,7 +52,6 @@ const DownLoadSongForm = (props: Props) => {
             toast.error('Сталася неочікувана помилка.');
         }
     };
-
     return (
         <form onSubmit={handleSubmit(submitDownloadedSong)} className="flex flex-col gap-4 p-6 max-w-[600px]">
             <div className="flex flex-col gap-2">

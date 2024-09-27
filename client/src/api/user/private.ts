@@ -11,7 +11,6 @@ privateUser.interceptors.request.use(async function (config: InternalAxiosReques
     return {
         ...config,
         headers: {
-            'Content-Type': 'application/json',
             "Authorization": `Bearer ${localStorage.getItem('activationToken')}`
         }
     } as InternalAxiosRequestConfig

@@ -9,14 +9,12 @@ import { SongType } from "@/types/types"
 
 const songApi = {
     addSong: async (formData: FormData) => {
+        
         try {
-            const response = await privateUser.post(
-                songEndpointsConfig.addSong,
-                formData
-            )
-            return { response }
+            const response = await privateUser.postForm(songEndpointsConfig.addSong, formData);
+            return { response };
         } catch (error) {
-            return { error }
+            return { error };
         }
     },
     getUserSongs: async (): Promise<{ response: SongType[] } | { error: any }> => {

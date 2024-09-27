@@ -14,9 +14,6 @@ const publicUser = axios.create({
 publicUser.interceptors.request.use(async function (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> {
     return {
         ...config,
-        headers: {
-            "Content-Type": "application/json"
-        }
     } as InternalAxiosRequestConfig
 }, async function (error) {
     throw error
