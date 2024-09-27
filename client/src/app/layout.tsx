@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <ClientProvider>
-        <ToastContainer />
+        <ToastContainer  className='z-20'/>
           {children}
         </ClientProvider>
       </body>
