@@ -1,5 +1,5 @@
 
-import { FavoriteParams } from "@/interfaces/apiInterfaces"
+import { FavoriteInfo, FavoriteParams } from "@/interfaces/apiInterfaces"
 import privateUser from "../user/private"
 import favoriteEndpointsConfig from "../endpoints/favorite/config"
 
@@ -43,8 +43,8 @@ const favoriteApi = {
             return { error }
         }
     },
-    isSongIsFavorites: async ({songId}: FavoriteParams) => {
-        console.log('is Favorite API', songId)
+    isSongIsFavorites: async ({songId}: FavoriteParams):  Promise<{ response: FavoriteInfo}|{error: any }>  => {
+        
         try {
             const response = await privateUser.get(
                 favoriteEndpointsConfig.isSongIsFavorites(songId),
@@ -52,7 +52,8 @@ const favoriteApi = {
                     params: {songId}
                 }
             )
-            return {response}
+            console.log('is Favorite API', response)
+            return { response } as unknown as FavoriteInfo
         } catch (error) {
             return {error}
         }

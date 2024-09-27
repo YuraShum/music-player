@@ -1,5 +1,4 @@
 'use client';
-
 import { FaRegUser } from "react-icons/fa";
 import { SiMixpanel } from "react-icons/si";
 import { FaBackwardStep } from "react-icons/fa6";
@@ -31,13 +30,13 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [musicVolume, setMusicVolume] = useState(0.5)
     const [isMuteMode, setIsMuteMode] = useState(false)
-    //!! Спробувати оптимізувати 
     const [duration, setDuration] = useState<number | null>(null)
     const [currentTime, setCurrentTime] = useState<number>(0)
     const [fixation, setFixation] = useState({
         loop: false,
         random: false
     })
+    const audioSrc = currentTrack ? `${configURL.BASE_URL}/${currentTrack.mp3}` : '';
 
     useCyclicalPlayback(audioRef, onPlay, fixation.loop)
     useRandomTrackPlayback({ audioRef, nextRandomTrack, randomeMode: fixation.random })
@@ -83,25 +82,21 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
     useEffect(() => {
         if (currentTrack && audioRef.current) {
             audioRef.current.volume = musicVolume
-
         }
     }, [musicVolume])
 
     useEffect(() => {
         if (audioRef.current) {
-
             const handleLoadedMetadata = () => {
                 if (audioRef.current) {
                     setDuration(audioRef.current.duration)
                 }
             }
-
             const handleTimeUpdate = () => {
                 if (audioRef.current) {
                     setCurrentTime(audioRef.current.currentTime)
                 }
             }
-
             audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
             audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
 
@@ -115,11 +110,11 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
         }
     }, [currentTrack])
 
-
     const handleMuteMode = () => {
         setIsMuteMode(true)
         setMusicVolume(0)
     }
+
     const handleLoudMode = () => {
         setIsMuteMode(false)
         setMusicVolume(0.5)
@@ -149,12 +144,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
             audioRef.current.currentTime = newTime
             setCurrentTime(newTime)
         }
-
     }
-
-
-    const audioSrc = currentTrack ? `${configURL.BASE_URL}/${currentTrack.mp3}` : '';
-
 
     return (
         <div >
@@ -223,7 +213,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                                 </div>
                             </div>
 
-                            <span className="text-sm opacity-60">{formatTime(duration)}</span>
+                            <span className="text-sm opacity-60">{formatTime(duration || 0)}</span>
                         </div>
                     </div>
                     <div className="flex gap-3 items-center justify-center">
@@ -245,7 +235,7 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                             min={0}
                             max={1}
                             step={0.02}
-                            onChange={(e) => setMusicVolume(e.target.value)} />
+                            onChange={(e: ChangeEvent<HTMLInputElement>) => setMusicVolume(Number(e.target.value))} />
                     </div>
                     <audio src={audioSrc} preload="auto" ref={audioRef} className="w-full h-6"></audio>
                 </div>

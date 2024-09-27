@@ -72,10 +72,10 @@ export default function Home() {
   return (
     <div className="rounded-3xl h-[95vh] overflow-auto p-6">
 
-      <Statistic 
-      songsLength={data?.songs?.length}
-      userRang={userRating}
-      playlistLength={data?.playlists?.length}/>
+      <Statistic
+        songsLength={data?.songs?.length}
+        userRang={userRating}
+        playlistLength={data?.playlists?.length} />
 
       <div className="flex flex-col relative">
         <div className="mt-20">
@@ -107,8 +107,8 @@ export default function Home() {
           onPlay={handlePlay}
           onPause={handlePause}
           previousTrack={handlePreviousTrack}
-          nextTrack={handleNextTrack} 
-          nextRandomTrack = {handleNextRandomTrack}/>
+          nextTrack={handleNextTrack}
+          nextRandomTrack={handleNextRandomTrack} />
 
 
         {/** Created playlists */}
@@ -120,7 +120,7 @@ export default function Home() {
                 key={playlist._id}
                 name={playlist.name}
                 description={playlist.description}
-                songs={playlist.songs}
+                songIds={playlist.songs}
                 id={playlist._id}
               />
             ))}

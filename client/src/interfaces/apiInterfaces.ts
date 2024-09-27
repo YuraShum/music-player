@@ -67,3 +67,7 @@ export interface UserInformation{
     songs: SongType[],
     username: string
 }
+
+export interface FavoriteInfo {
+    isFavorite: boolean
+}

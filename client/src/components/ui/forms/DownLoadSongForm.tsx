@@ -8,24 +8,19 @@ type Props = {};
 interface DownloadSongsParams {
     title: string;
     artist: string;
-    mp3: File | Blob;
-    cover?: File | Blob;
+    mp3: FileList;
+    cover?: FileList;
 }
 
 const DownLoadSongForm = (props: Props) => {
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm<DownloadSongsParams>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<DownloadSongsParams>();
 
-    const submitDownloadedSong: SubmitHandler<DownloadSongsParams> = async (values) => {
+    const submitDownloadedSong: SubmitHandler<DownloadSongsParams> = async (values: DownloadSongsParams) => {
         const formData = new FormData();
         formData.append('title', values.title);
         formData.append('artist', values.artist);
-    
-        const musicFile = values.mp3[0]; 
+
+        const musicFile:  File | Blob = values.mp3[0]
         if (musicFile) {
             formData.append('mp3', musicFile);
         } else {
@@ -33,12 +28,12 @@ const DownLoadSongForm = (props: Props) => {
             return;
         }
         if (values.cover) {
-            formData.append('cover', values.cover[0]); 
+            formData.append('cover', values.cover[0]);
         }
-    
+
         try {
             const { response, error } = await songApi.addSong(formData);
-    
+
             if (response) {
                 toast.success('Пісня завантажена успішно.');
                 reset();
@@ -88,7 +83,7 @@ const DownLoadSongForm = (props: Props) => {
                         required: true,
                         validate: (fileList) => {
                             const file = fileList?.[0];
-                            return file?.type === 'audio/mpeg' || 'Формат файлу має бути MP3.';
+                            return file.type === 'audio/mpeg' || 'Формат файлу має бути MP3.';
                         },
                     })}
                     className="bg-gray-100 p-3 text-sm border-gray-300 border-2 rounded-lg"

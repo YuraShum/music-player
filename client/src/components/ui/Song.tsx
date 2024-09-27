@@ -28,70 +28,88 @@ type Props = {
 //!! зупиняти та відновлювати один і той самий трек неможливо)
 const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying }: Props) => {
 
-    const [musicIsPlay, setMusicIsPlay] = useState(false)
-    const [isFavoriteSong, setIsFavoriteSong] = useState(false)
+    const [musicIsPlay, setMusicIsPlay] = useState<boolean>(false)
+    const [isFavoriteSong, setIsFavoriteSong] = useState<boolean>(false)
     const coverSrc = cover ? `${configURL.BASE_URL}/${cover}` : ''
+    const isCurrentTrack = currentTrack && currentTrack.mp3 === mp3 && currentTrack.title === title
 
 
     useEffect(() => {
-        const checkIsFavoriteSong = async () => {
-            const { response, error } = await favoriteApi.isSongIsFavorites({ songId: id })
+        try {
+            const checkIsFavoriteSong = async () => {
+                const result = await favoriteApi.isSongIsFavorites({ songId: id })
+                if ("response" in result) {
+                    console.log('Song is Favorite', result.response)
+                    setIsFavoriteSong(result.response.isFavorite)
+                }
+                if ("error" in result) {
+                    console.log(result.error)
+                }
+            }
+            checkIsFavoriteSong()
+        } catch (err) {
+            console.log(err)
+        }
+    }, [id])
+
+    const handleDeleteSong = async () => {
+        try {
+            const { response, error } = await songApi.deleteSong({ songId: id });
+
             if (response) {
-                console.log('Song is Favorite', response)
-                setIsFavoriteSong(response.isFavorite)
+                toast.success('Пісню успішно видалено');
+            }
+            if (error) {
+                console.log(error);
+                toast.error("Пісню неможливо видалити");
+            }
+        } catch (err) {
+            console.log(err)
+        }
+    };
+
+    const handleAddToFavorite = async () => {
+        try {
+            const { response, error } = await favoriteApi.addToFavorites({ songId: id })
+            if (response) {
+                setIsFavoriteSong(true)
             }
             if (error) {
                 console.log(error)
             }
-        }
-        checkIsFavoriteSong()
-    }, [])
-    const handleDeleteSong = async () => {
-        const { response, error } = await songApi.deleteSong({ songId: id });
-
-        if (response) {
-            toast.success('Пісню успішно видалено');
-        }
-        if (error) {
-            console.log(error);
-            toast.error("Пісню неможливо видалити");
-        }
-    };
-    const handleMusicIsPlaying = () => {
-        onPlay()
-        setMusicIsPlay(true)
-    }
-    const handleMusicISPausing = () => {
-        setMusicIsPlay(false)
-    }
-
-    const handleAddToFavorite = async () => {
-        const { response, error } = await favoriteApi.addToFavorites({ songId: id })
-        if (response) {
-            setIsFavoriteSong(true)
-        }
-        if (error) {
-            console.log(error)
+        } catch (err) {
+            console.log(err)
         }
     }
 
     const handleRemoveFromFavorite = async () => {
-        const { response, error } = await favoriteApi.removeFromFavorites({ songId: id })
-
-        if (response) {
-            setIsFavoriteSong(false)
-        }
-        if (error) {
-            console.log(error)
+        try {
+            const { response, error } = await favoriteApi.removeFromFavorites({ songId: id })
+            if (response) {
+                setIsFavoriteSong(false)
+            }
+            if (error) {
+                console.log(error)
+            }
+        } catch (err) {
+            console.log(err)
         }
     }
-    const isCurrentTrack = currentTrack && currentTrack.mp3 === mp3 && currentTrack.title === title
+
+    const handleMusicIsPlaying = () => {
+        onPlay()
+        setMusicIsPlay(true)
+    }
+
+    const handleMusicISPausing = () => {
+        setMusicIsPlay(false)
+    }
 
     return (
         <div>
             <div className='flex justify-between'>
                 <div className='flex items-center gap-8'>
-                    <span className='text-xl font-bold text-gray-400'>{9 >= index && 0}{index + 1}</span>
+                    <p className='text-xl font-bold text-gray-400 min-w-8'>{9 >= index && 0}{index + 1}</p>
                     {cover ?
                         <img src={coverSrc} alt='song title' className='w-16 h-16 bg-gray-200 rounded-xl' /> :
                         <SiMusicbrainz style={{ color: getHexColorByText(title) }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
