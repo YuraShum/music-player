@@ -22,9 +22,7 @@ type Props = {
     currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
     isPlaying: boolean,
     deletedSong: () => void,
-
 }
-
 
 const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPlaying, deletedSong}: Props) => {
 
@@ -100,10 +98,9 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
         
     }
 
-
     return (
         <div>
-            <div className='flex justify-between'>
+            <div className='flex justify-between hover:bg-gray-200 p-4'>
                 <div className='flex items-center gap-8'>
                     <p className='text-xl font-bold text-gray-400 min-w-8'>{9 >= index && 0}{index + 1}</p>
                     {cover ?
@@ -112,14 +109,11 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                     }
                     {isCurrentTrack && isPlaying ?
                         <FaCirclePause
-                            className='w-8 h-8 cursor-pointer text-primary'
-                            
-                        />
+                            className='w-8 h-8 cursor-pointer text-primary'/>
                         :
                         <FaPlayCircle
                             className='w-8 h-8 cursor-pointer text-primary'
                             onClick={handleMusicIsPlaying} />}
-
                     <div className='flex flex-col'>
                         <h2 className='text-lg font-bold'>{title}</h2>
                         <div className='flex gap-2 items-center text-gray-400'>
@@ -127,7 +121,6 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                             <p>{artist}</p>
                         </div>
                     </div>
-
                 </div>
                 <div className='flex gap-6 items-center'>
                     {isFavoriteSong ?

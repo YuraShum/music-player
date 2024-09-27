@@ -117,7 +117,7 @@ const Page = (props: Props) => {
             {/** Downloaded songs section */}
             <div className='mt-16'>
                 <h2 className="text-2xl font-bold">Downloaded songs</h2>
-                <div className="flex flex-col gap-6 p-6 h-full max-h-[70vh] overflow-auto">
+                <div className="flex flex-col h-full max-h-[70vh] overflow-auto">
                     {songs?.map((song, index) => (
                         <Song
                             key={song._id}

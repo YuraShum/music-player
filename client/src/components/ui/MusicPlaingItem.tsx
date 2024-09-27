@@ -14,7 +14,6 @@ import { formatTime } from "@/utils/utils.ts";
 import useCyclicalPlayback from "@/hooks/useCyclicalPlayback.ts";
 import useRandomTrackPlayback from "@/hooks/useRandomTrackPlayback.ts";
 
-
 type Props = {
     currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
     isPlaying: boolean,
@@ -41,7 +40,6 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
     useCyclicalPlayback(audioRef, onPlay, fixation.loop)
     useRandomTrackPlayback({ audioRef, nextRandomTrack, randomeMode: fixation.random })
 
-
     const playAudio = () => {
         if (audioRef.current) {
             audioRef.current.play()
@@ -56,7 +54,6 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
             onPause();
         }
     };
-
 
     useEffect(() => {
         const handleError = () => {
@@ -99,7 +96,6 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
             }
             audioRef.current.addEventListener('loadedmetadata', handleLoadedMetadata);
             audioRef.current.addEventListener('timeupdate', handleTimeUpdate);
-
             return () => {
                 if (audioRef.current) {
                     audioRef.current.removeEventListener('loadedmetadata', handleLoadedMetadata);
@@ -149,7 +145,6 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
     return (
         <div >
             {currentTrack && (
-
                 <div className="flex justify-between items-center bg-gradient-to-t from-primary to-hovered p-3 rounded-lg text-white relative">
                     <div className="flex items-center gap-6 w-full max-w-[300px]">
                         <div>
@@ -209,15 +204,12 @@ const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, 
                                     onChange={handleProgressChange}
                                     className="w-full  h-1 bg-transparent cursor-pointer accent-white" />
                                 <div>
-
                                 </div>
                             </div>
-
                             <span className="text-sm opacity-60">{formatTime(duration || 0)}</span>
                         </div>
                     </div>
                     <div className="flex gap-3 items-center justify-center">
-
                         {isMuteMode ?
                             <CiVolumeMute
                                 className="w-6 h-6 cursor-pointer"
