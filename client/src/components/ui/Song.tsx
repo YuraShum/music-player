@@ -107,7 +107,7 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
                 <div className='flex items-center gap-8'>
                     <p className='text-xl font-bold text-gray-400 min-w-8'>{9 >= index && 0}{index + 1}</p>
                     {cover ?
-                        <img src={coverSrc} alt='song title' className='w-16 h-16 bg-gray-200 rounded-xl' /> :
+                        <img src={coverSrc} alt='song title' className='w-16 h-16 bg-gray-200 rounded-xl object-cover' /> :
                         <SiMusicbrainz style={{ color: getHexColorByText(title) }} className='w-16 h-16 bg-gray-200 rounded-xl ' />
                     }
                     {isCurrentTrack && isPlaying ?

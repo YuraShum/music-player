@@ -17,7 +17,7 @@ const FavoriteItem = ({ favoriteSong, onDeleteFromFavorites }: Props) => {
         <div className='flex justify-between items-center border-b-2 border-gray-300'>
             <div className='flex gap-4 p-2'>
                 {favoriteSong.cover ?
-                    <img src={coverSrc} alt='song title' className='w-24 h-24 bg-gray-200 rounded-xl' /> :
+                    <img src={coverSrc} alt='song title' className='w-24 h-24 bg-gray-200 rounded-xl object-cover' /> :
                     <SiMusicbrainz style={{ color: getHexColorByText(favoriteSong.title) }} className='w-24 h-24 bg-gray-200 rounded-xl ' />
                 }
                 <div className=''>

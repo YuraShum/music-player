@@ -194,7 +194,7 @@ const Playlist = ({ name, description, songsId, id, handlePlaylist }: Props) => 
                                                 <img
                                                     src={`${configURL.BASE_URL}/${song.cover}`}
                                                     alt="song title"
-                                                    className="w-14 h-14 bg-gray-200 rounded-xl"
+                                                    className="w-14 h-14 bg-gray-200 rounded-xl object-cover"
                                                 />
                                                 <div>
                                                     <h3 className="text-xl font-bold">{song.title}</h3>
