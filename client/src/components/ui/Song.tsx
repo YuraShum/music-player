@@ -30,13 +30,11 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
     const coverSrc = cover ? `${configURL.BASE_URL}/${cover}` : ''
     const isCurrentTrack = currentTrack && currentTrack.mp3 === mp3 && currentTrack.title === title
 
-
     useEffect(() => {
         try {
             const checkIsFavoriteSong = async () => {
                 const result = await favoriteApi.isSongIsFavorites({ songId: id })
                 if ("response" in result) {
-                    console.log('Song is Favorite', result.response)
                     setIsFavoriteSong(result.response.isFavorite)
                 }
                 if ("error" in result) {

@@ -52,7 +52,6 @@ const favoriteApi = {
                     params: {songId}
                 }
             )
-            console.log('is Favorite API', response)
             return { response } as unknown as FavoriteInfo
         } catch (error) {
             return {error}

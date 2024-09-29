@@ -22,7 +22,6 @@ const Page = (props: Props) => {
             const result = await favoriteApi.getAllUserFavoritesSongs();
 
             if ('response' in result) {
-                console.log("favorite songs", result.response);
                 setFavoriteSongsId(result.response || []);
             } else if ('error' in result) {
                 console.log(result.error);
