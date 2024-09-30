@@ -13,9 +13,10 @@ import { CiVolumeMute } from "react-icons/ci";
 import { formatTime } from "@/utils/utils.ts";
 import useCyclicalPlayback from "@/hooks/useCyclicalPlayback.ts";
 import useRandomTrackPlayback from "@/hooks/useRandomTrackPlayback.ts";
+import { SongType } from "@/types/types.ts";
 
 type Props = {
-    currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
+    currentTrack: SongType| null,
     isPlaying: boolean,
     onPlay: () => void,
     onPause: () => void,
@@ -23,15 +24,19 @@ type Props = {
     previousTrack: () => void,
     nextRandomTrack: () => void
 }
+interface FixationParam {
+    loop: boolean,
+    random: boolean
+}
 
 const MusicPlaingItem = ({ currentTrack, isPlaying, onPlay, onPause, nextTrack, previousTrack, nextRandomTrack }: Props) => {
 
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [musicVolume, setMusicVolume] = useState(0.5)
-    const [isMuteMode, setIsMuteMode] = useState(false)
+    const [isMuteMode, setIsMuteMode] = useState<boolean>(false)
     const [duration, setDuration] = useState<number | null>(null)
     const [currentTime, setCurrentTime] = useState<number>(0)
-    const [fixation, setFixation] = useState({
+    const [fixation, setFixation] = useState<FixationParam>({
         loop: false,
         random: false
     })

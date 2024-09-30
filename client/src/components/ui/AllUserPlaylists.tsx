@@ -1,10 +1,10 @@
 import React from 'react'
 import Playlist from './Playlist'
+import { PlaylistType } from '@/types/types'
 
 type Props = {
-    playlists: any[],
+    playlists: PlaylistType[],
     handlePlaylist: () => void
-
 }
 
 const AllUserPlaylists = ({ playlists, handlePlaylist }: Props) => {

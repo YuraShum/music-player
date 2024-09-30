@@ -7,13 +7,8 @@ import CustomButton from './CustomButton'
 import SigninForm from './forms/SigninForm'
 import SignupForm from './forms/SignupForm'
 
+const ModalWindow = () => {
 
-type Props = {}
-
-const ModalWindow = (props: Props) => {
-
-    const dispatch = useDispatch()
-    const { authUser } = useSelector((state: any) => state.authUser)
     const [isLogin, setIsLogin] = useState(false)
 
     return (

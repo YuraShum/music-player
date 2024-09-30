@@ -10,6 +10,7 @@ import configURL from '../../const/config.ts'
 import favoriteApi from '@/api/requests/favorite.requests.ts';
 import { FaHeart } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { SongType } from '@/types/types.ts';
 
 type Props = {
     artist: string,
@@ -19,7 +20,7 @@ type Props = {
     index: number,
     id: string,
     onPlay: () => void,
-    currentTrack: { mp3: string, cover: string, artist: string, title: string } | null,
+    currentTrack: SongType| null,
     isPlaying: boolean,
     deletedSong: () => void,
 }
@@ -93,7 +94,6 @@ const Song = ({ artist, cover, mp3, title, index, id, onPlay, currentTrack, isPl
 
     const handleMusicIsPlaying = () => {
         onPlay()
-        
     }
 
     return (

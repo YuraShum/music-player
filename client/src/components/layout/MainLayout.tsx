@@ -21,21 +21,19 @@ const MainLayout = ({ children }: Props) => {
     const { authUser } = useSelector((state: any) => state.authUser)
     useEffect(() => {
         const getAuthUser = async () => {
-        try {
-            const result = await userApi.getUserInformation()
-
-            if ('response' in result) {
-                dispatch(setUser(result.response))
+            try {
+                const result = await userApi.getUserInformation()
+                if ('response' in result) {
+                    dispatch(setUser(result.response))
+                }
+                if ('error' in result) {
+                    dispatch(setUser(null))
+                    dispatch(setAuthUser(true))
+                }
+            } catch (err) {
+                console.log(err)
             }
-            if ('error' in result) {
-                dispatch(setUser(null))
-                dispatch(setAuthUser(true))
-            }
-        } catch (err) {
-            console.log(err)
         }
-        }
-
         getAuthUser()
     }, [dispatch])
 
