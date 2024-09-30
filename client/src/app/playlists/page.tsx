@@ -8,6 +8,7 @@ import AllUserPlaylists from '@/components/ui/AllUserPlaylists'
 import { IoIosSearch } from "react-icons/io";
 import { PlaylistType, SongType } from '@/types/types'
 import songApi from '@/api/requests/song.requests'
+import Search from '@/components/ui/Search';
 
 type Props = {}
 
@@ -87,13 +88,7 @@ const page = (props: Props) => {
                             </>}
                     </button>
                 </div>
-                <div className='relative'>
-                    <IoIosSearch className='absolute top-2 left-0 w-8 h-8 text-gray-400' />
-                    <input
-                        placeholder='Search'
-                        className='bg-gray-100 p-3 pl-8 text-sm border-gray-300 border-2 rounded-lg w-full'
-                        value={searchValue} onChange={(event) => handleChangeSearchValue(event)} />
-                </div>
+                <Search handleChangeSearchValue={handleChangeSearchValue} searchValue={searchValue}/>
             </div>
             {/** create new playlist form */}
             {createNewPlaylistIsOpen && <CreateNewPlaylistForm onPlaylistCreated={handlePlaylist} userSongs={userSongs} openForm={setCreateNewPlaylistIsOpen} />}

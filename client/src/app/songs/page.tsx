@@ -9,6 +9,7 @@ import Song from '@/components/ui/Song'
 import MusicPlaingItem from '@/components/ui/MusicPlaingItem'
 import { randomNonRepeatingIndex } from '@/utils/utils'
 import { SongType } from '@/types/types'
+import Search from '@/components/ui/Search';
 
 type Props = {}
 
@@ -101,13 +102,7 @@ const Page = (props: Props) => {
                         <span>Download</span>
                     </button>
                 </div>
-                <div className='relative'>
-                    <IoIosSearch className='absolute top-2 left-0 w-8 h-8 text-gray-400' />
-                    <input
-                        placeholder='Search'
-                        className='bg-gray-100 p-3 pl-8 text-sm border-gray-300 border-2 rounded-lg w-full'
-                        value={searchValue} onChange={(event) => handleChangeSearchValue(event)} />
-                </div>
+                <Search searchValue={searchValue} handleChangeSearchValue={handleChangeSearchValue} />
             </div>
             {/** download song section */}
             {createFormIsOpen &&

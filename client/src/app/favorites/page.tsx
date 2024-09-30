@@ -2,6 +2,7 @@
 import favoriteApi from '@/api/requests/favorite.requests'
 import songApi from '@/api/requests/song.requests'
 import FavoriteItem from '@/components/ui/FavoriteItem'
+import Search from '@/components/ui/Search'
 import { SongType } from '@/types/types'
 import React, { ChangeEvent, useEffect, useState } from 'react'
 import { FaHeart } from "react-icons/fa";
@@ -90,14 +91,7 @@ const Page = (props: Props) => {
                         <span className='absolute top-[6px] left-[13px] text-xl font-bold text-white'>{favoriteSongsId.length}</span>
                     </div>
                 </div>
-                <div className='relative'>
-                    <IoIosSearch className='absolute top-2 left-0 w-8 h-8 text-gray-400' />
-                    <input
-                        placeholder='Search'
-                        className='bg-gray-100 p-3 pl-8 text-sm border-gray-300 border-2 rounded-lg w-full'
-                        value={searchValue}
-                        onChange={handleChangeSearchValue} />
-                </div>
+                <Search searchValue={searchValue} handleChangeSearchValue={handleChangeSearchValue}/>
             </div>
             {filteredFavoriteSongs.map((favorite) => (
                 <div
