@@ -6,23 +6,15 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
-type Props = {}
-
 interface ExitUserParams {
     username: string,
     password: string
 }
 
-const SigninForm = (props: Props) => {
+const SigninForm = () => {
 
     const dispatch = useDispatch()
-
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm<ExitUserParams>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<ExitUserParams>();
 
     const submitExitUser: SubmitHandler<ExitUserParams> = async (values) => {
         const { response, error } = await userApi.userSignIn(values)

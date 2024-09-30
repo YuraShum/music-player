@@ -15,15 +15,14 @@ interface DownloadSongsParams {
     cover?: FileList;
 }
 
-const DownLoadSongForm = ({onCretedNewSong, setCreateFromIsOpen}: Props) => {
+const DownLoadSongForm = ({ onCretedNewSong, setCreateFromIsOpen }: Props) => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm<DownloadSongsParams>();
 
     const submitDownloadedSong: SubmitHandler<DownloadSongsParams> = async (values: DownloadSongsParams) => {
         const formData = new FormData();
         formData.append('title', values.title);
         formData.append('artist', values.artist);
-
-        const musicFile:  File | Blob = values.mp3[0]
+        const musicFile: File | Blob = values.mp3[0]
         if (musicFile) {
             formData.append('mp3', musicFile);
         } else {
@@ -33,16 +32,13 @@ const DownLoadSongForm = ({onCretedNewSong, setCreateFromIsOpen}: Props) => {
         if (values.cover) {
             formData.append('cover', values.cover[0]);
         }
-
         try {
             const { response, error } = await songApi.addSong(formData);
-
             if (response) {
                 toast.success('Пісня завантажена успішно.');
                 reset();
                 setCreateFromIsOpen(false)
                 onCretedNewSong()
-                
             }
             if (error) {
                 console.log(error);

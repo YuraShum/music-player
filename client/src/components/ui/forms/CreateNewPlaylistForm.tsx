@@ -3,6 +3,7 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { RxCrossCircled } from "react-icons/rx";
+import { SongType } from '@/types/types';
 
 interface CreatePlaylistParams {
     name: string,
@@ -11,7 +12,7 @@ interface CreatePlaylistParams {
 }
 type Props = {
     onPlaylistCreated: () => void,
-    userSongs: any[],
+    userSongs: SongType[],
     openForm: (value: boolean) => void
 }
 
@@ -107,7 +108,6 @@ const CreateNewPlaylistForm = ({ onPlaylistCreated, userSongs, openForm }: Props
                 <ul className='max-h-[20vh] overflow-auto ml-3 flex flex-col gap-2 '>
                     {selectedSongs.map((songId, index) => {
                         const song = userSongs.find(song => song._id === songId)
-
                         return (
                             <li key={songId}
                                 className='bg-gray-100 p-3 text-sm w-full border-2 border-gray-300 rounded-lg flex justify-between items-center hover:bg-hovered hover:text-white duration-300'>
@@ -129,7 +129,6 @@ const CreateNewPlaylistForm = ({ onPlaylistCreated, userSongs, openForm }: Props
                 className="bg-primary text-white p-3 rounded-lg hover:bg-hovered duration-500 hover:translate-y-[-2px]">
                 Create
             </button>
-
         </form>
     )
 }

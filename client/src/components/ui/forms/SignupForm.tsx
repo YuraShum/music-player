@@ -6,23 +6,15 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 
-type Props = {};
-
 interface NewUserParams {
     username: string;
     password: string;
     confirmPassword: string;
 }
 
-const SignupForm = (props: Props) => {
+const SignupForm = () => {
     const dispatch = useDispatch();
-
-    const {
-        register,
-        handleSubmit,
-        reset,
-        formState: { errors },
-    } = useForm<NewUserParams>(); 
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<NewUserParams>();
 
     const submitNewUser: SubmitHandler<NewUserParams> = async (values) => {
         const { response, error } = await userApi.userSignup(values);
@@ -31,7 +23,7 @@ const SignupForm = (props: Props) => {
             dispatch(setUser(response));
             dispatch(setAuthUser(false));
             toast.success('Вхід дозволений!!');
-        } 
+        }
         if (error) {
             console.log(error);
         }

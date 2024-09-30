@@ -1,5 +1,6 @@
 import playlistApi from '@/api/requests/playlist.requests'
 import { GetSongsInformationParams } from '@/interfaces/apiInterfaces'
+import { SongType } from '@/types/types'
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { RxCrossCircled } from 'react-icons/rx'
@@ -11,10 +12,10 @@ interface SongsParams {
 }
 type Props = {
     playlistId: string,
-    includedSongs: any[],
+    includedSongs: SongType[],
     handlePlaylist: (selectedSongs: string[]) => void,
     closeForm: (value: boolean) => void,
-    userSongs: any[]
+    userSongs: SongType[]
 }
 
 const AddSongsToPlaylistForm = ({ playlistId, includedSongs, handlePlaylist, closeForm, userSongs }: Props) => {
