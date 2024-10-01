@@ -35,7 +35,7 @@ const UpdateUserPasswordForm = (props: Props) => {
     return (
         <form
             onSubmit={handleSubmit(submiteNewPassword)}
-            className='flex flex-col gap-4 p-6 max-w-[600px] w-full'>
+            className='flex flex-col gap-4 p-2 md:p-6 max-w-[600px] w-full'>
             <div className='flex flex-col gap-2'>
                 <label className='text-sm font-bold'>
                     User's password *
@@ -78,15 +78,15 @@ const UpdateUserPasswordForm = (props: Props) => {
                         Пароль користувача має бути більшим 8 символів.
                     </p>}
             </div>
-            <div className='flex justify-between items-center'>
+            <div className='flex gap-2 flex-col-reverse md:flex-row md:justify-between md:items-center'>
                 <button
                     onClick={() => reset()}
-                    className='border-2 text-white bg-link border-gray-300 p-2 hover:bg-orange-400 rounded-lg font-bold transition hover:translate-y-[-2px] duration-500'>
+                    className=' w-fit border-2 text-white bg-link border-gray-300 p-2 hover:bg-orange-400 rounded-lg font-bold transition hover:translate-y-[-2px] duration-500'>
                     Cancel
                 </button>
                 <button
                     type='submit'
-                    className="p-2 bg-primary text-white rounded hover:bg-hovered transition hover:translate-y-[-2px] duration-500">
+                    className=" w-fit p-2 bg-primary text-white rounded hover:bg-hovered transition hover:translate-y-[-2px] duration-500">
                     Change password
                 </button>
             </div>

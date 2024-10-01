@@ -15,14 +15,14 @@ const FavoriteItem = ({ favoriteSong, onDeleteFromFavorites }: Props) => {
     const coverSrc = favoriteSong.cover ? `${configURL.BASE_URL}/${favoriteSong.cover}` : ''
     return (
         <div className='flex justify-between items-center border-b-2 border-gray-300'>
-            <div className='flex gap-4 p-2'>
+            <div className='flex gap-2 md:gap-4 py-2'>
                 {favoriteSong.cover ?
-                    <img src={coverSrc} alt='song title' className='w-24 h-24 bg-gray-200 rounded-xl object-cover' /> :
-                    <SiMusicbrainz style={{ color: getHexColorByText(favoriteSong.title) }} className='w-24 h-24 bg-gray-200 rounded-xl ' />
+                    <img src={coverSrc} alt='song title' className='w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gray-200 rounded-xl object-cover' /> :
+                    <SiMusicbrainz style={{ color: getHexColorByText(favoriteSong.title) }} className='w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 bg-gray-200 rounded-xl ' />
                 }
                 <div className=''>
-                    <h2 className='font-bold text-2xl'>{favoriteSong.title}</h2>
-                    <span className='text-sm opacity-75'>{favoriteSong.artist}</span>
+                    <h2 className='font-bold text-ls md:text-xl lg:text-2xl'>{favoriteSong.title}</h2>
+                    <span className='text-sm md:text-base opacity-75'>{favoriteSong.artist}</span>
                 </div>
             </div>
             <button

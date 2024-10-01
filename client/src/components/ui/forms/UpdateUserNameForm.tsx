@@ -38,7 +38,7 @@ const UpdateUserNameForm = ({ name }: Props) => {
     return (
         <form
             onSubmit={handleSubmit(submitNewUserName)}
-            className='flex flex-col gap-4 p-6 max-w-[600px] w-full'>
+            className='flex flex-col gap-4 p-2 md:p-6 max-w-[600px] w-full'>
             {/** curent user name section */}
             <div className='flex flex-col gap-2 '>
                 <label className='text-sm font-bold'>
@@ -64,15 +64,15 @@ const UpdateUserNameForm = ({ name }: Props) => {
                         Ім'я має бути більше 8 символів.
                     </p>}
             </div>
-            <div className='flex justify-between items-center'>
+            <div className='flex gap-2 flex-col-reverse md:flex-row justify-start md:justify-between md:items-center'>
                 <button
-                    className='border-2 text-white bg-link hover:bg-orange-400 border-gray-300 p-2 rounded-lg font-bold transition hover:translate-y-[-2px] duration-500'
+                    className=' w-fit border-2 text-white bg-link hover:bg-orange-400 border-gray-300 p-2 rounded-lg font-bold transition hover:translate-y-[-2px] duration-500'
                     onClick={() => reset()}>
                     Cancel
                 </button>
                 <button
                     type='submit'
-                    className=" p-2 bg-primary text-white wont-bold rounded hover:bg-hovered transition hover:translate-y-[-2px] duration-500">
+                    className="w-fit p-2 bg-primary text-white wont-bold rounded hover:bg-hovered transition hover:translate-y-[-2px] duration-500">
                     Change username
                 </button>
             </div>

@@ -83,12 +83,12 @@ const Page = (props: Props) => {
     return (
         <div className='p-4 h-[95vh] overflow-auto'>
             {/** section serach favorite song */}
-            <div className='flex items-center justify-between'>
+            <div className='flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
                 <div className='flex items-center gap-2'>
-                    <h2 className='text-4xl font-bold '>Favorite songs</h2>
+                    <h2 className='text-2xl md:text-3xl lg:text-4xl font-bold '>Favorite songs</h2>
                     <div className='relative'>
-                        <FaHeart className='w-10 h-10 text-red-600' />
-                        <span className='absolute top-[6px] left-[13px] text-xl font-bold text-white'>{favoriteSongsId.length}</span>
+                        <FaHeart className='w-8 h-8 lg:w-10 lg:h-10 text-red-600' />
+                        <span className='absolute top-[2px] left-[9px] lg:top-[6px] lg:left-[13px] text-lg lg:text-xl font-bold text-white'>{favoriteSongsId.length}</span>
                     </div>
                 </div>
                 <Search searchValue={searchValue} handleChangeSearchValue={handleChangeSearchValue}/>
