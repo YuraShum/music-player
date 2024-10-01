@@ -89,7 +89,7 @@ export default function Home() {
       <div className="flex flex-col relative ">
         <div className="mt-20">
           {/** Download music section */}
-          <h2 className="text-2xl font-bold absolute mt-[-35px]">Recently downloaded songs</h2>
+          <h2 className="text-2xl font-bold absolute mt-[-45px] ">Recently downloaded songs</h2>
           <div className="relative max-h-[40vh] overflow-auto border-2 rounded-t-lg border-b-0">
             <div className="flex flex-col">
               {data && data.songs.map((song, index) => (
@@ -120,8 +120,8 @@ export default function Home() {
           nextRandomTrack={handleNextRandomTrack} />
         {/** Created playlists */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold">Recently created playlists</h2>
-          <div className="flex flex-col gap-6 p-6">
+          <h2 className="text-2xl font-bold mb-4">Recently created playlists</h2>
+          <div className="flex flex-col gap-6">
             {data && data.playlists.map((playlist) => (
               <Playlist
                 key={playlist._id}

@@ -7,6 +7,7 @@ import configURL from '@/const/config.ts'
 import { MdDelete } from "react-icons/md";
 import AddSongsToPlaylistForm from './forms/AddSongsToPlaylistForm'
 import { SongType } from '@/types/types'
+import { SiMusicbrainz } from 'react-icons/si'
 
 type Props = {
     name: string,
@@ -202,9 +203,12 @@ const Playlist = ({ name, description, songsId, id, handlePlaylist }: Props) => 
                                                 </div>
                                             </div>
                                         ) : (
-                                            <div>
+                                            <div className='flex gap-2 items-center'>
+                                                <SiMusicbrainz style={{ color: getHexColorByText(song.title) }} className='w-14 h-14 bg-gray-200 rounded-xl ' />
+                                                <div>
                                                 <h3 className="text-xl font-bold">{song.title}</h3>
                                                 <p className="text-sm">{song.artist}</p>
+                                                </div>
                                             </div>
                                         )}
                                     </td>
