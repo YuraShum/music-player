@@ -7,7 +7,7 @@ type Props ={
 }
 const UserProfile = ({ userInformation, userRaiting }: Props) => {
     return (
-        <div className='relative max-w-[40%] w-full border-2 border-gray-200 flex flex-col justify-between'>
+        <div className='relative md:max-w-[40%] w-full border-2 border-gray-200 flex flex-col justify-between'>
             <div className='absolute inset-x-0 top-[-80px] flex justify-center items-center'>
                 <div className='rounded-full bg-orange-400 w-40 h-40 flex justify-center items-center text-white'>
                     <FaUserAlt className='w-20 h-20' />

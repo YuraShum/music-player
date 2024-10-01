@@ -49,12 +49,12 @@ const page = (props: Props) => {
                 <img className='rounded-t-lg h-[30vh] w-full opacity-70 overflow-hidden object-cover' src='/modalImg.jpg' alt="" />
             </div>
             {/** user section */}
-            <div className='flex'>
+            <div className='flex flex-col md:flex-row'>
                 {/** user information section */}
                 <UserProfile userInformation={userInformation} userRaiting={userRaiting} />
                 {/** update section */}
-                <div className='max-w-[60%] w-full bg-slate-200'>
-                    <div className=' flex gap-4 justify-center items-center mt-4'>
+                <div className='md:max-w-[60%] w-full bg-slate-200 rounded-b-lg md:rounded-none px-2'>
+                    <div className=' flex flex-col md:flex-row gap-4 justify-center items-center mt-4 '>
                         <CustomButton text='Update username' handleClick={() => setIsUpdateUserNameOpen(true)} />
                         <CustomButton text='Update password' handleClick={() => setIsUpdateUserNameOpen(false)} />
                     </div>
